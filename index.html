@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DQMBV パーティ保存ツール</title>
+<style>
+
+:root {
+  --bg-main: #0d0f12;
+  --bg-panel: #16181d;
+  --bg-panel-alt: #1c1f26;
+  --bg-card: #202329;
+  --border-color: #2c2f36;
+  --border-color-light: #383c45;
+  --text-main: #e8e9ec;
+  --text-sub: #9aa0ab;
+  --text-faint: #6b7079;
+  --accent: #5b8def;
+  --accent-hover: #4877d6;
+  --accent-soft: rgba(91,141,239,0.14);
+  --danger: #e05263;
+  --danger-hover: #c8465a;
+  --success: #4cbb87;
+  --hero-accent: #f0c34c;
+  --hero-soft: rgba(240,195,76,0.12);
+  --tag-job-bg: #2a3550;
+  --tag-job-text: #93b4ff;
+  --tag-type-bg: #3a2a50;
+  --tag-type-text: #c79bff;
+  --tag-habitat-bg: #2a4a3d;
+  --tag-habitat-text: #7fe3bd;
+  --tag-others-bg: #4a3a2a;
+  --tag-others-text: #f0b97d;
+  --tag-third-bg: #4a2a35;
+  --tag-third-text: #ff9db0;
+  --tag-equip-bg: #4a4020;
+  --tag-equip-text: #f0d97d;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-card: 0 2px 10px rgba(0,0,0,0.35);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 16px 80px;
+}
+
+header.top {
+  text-align: center;
+  padding: 18px 0 22px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+header.top h1 {
+  font-size: 1.5rem;
+  margin: 0 0 6px;
+  letter-spacing: 0.02em;
+  background: linear-gradient(90deg, #8fb4ff, #c79bff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+header.top p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+
+.app-footer {
+  text-align: center;
+  padding: 24px 0 8px;
+  margin-top: 8px;
+}
+
+.credit-link {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 0.74rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px 8px;
+  transition: color 0.15s;
+}
+.credit-link:hover {
+  color: var(--text-sub);
+}
+
+.credit-box {
+  max-width: 420px;
+  text-align: left;
+}
+
+.credit-title {
+  font-size: 0.98rem;
+  margin: 0 0 14px;
+  color: var(--text-main);
+  text-align: center;
+}
+
+.credit-text {
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: var(--text-sub);
+  margin: 0 0 14px;
+}
+
+.credit-disclaimer {
+  font-size: 0.74rem;
+  line-height: 1.7;
+  color: var(--text-faint);
+  border-top: 1px dashed var(--border-color-light);
+  padding-top: 12px;
+  margin: 0 0 18px;
+}
+
+.credit-box .confirm-buttons {
+  justify-content: center;
+}
+.credit-box .confirm-cancel {
+  flex: none;
+  padding: 9px 28px;
+}
+
+section {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+section h2 {
+  font-size: 1.05rem;
+  margin: 0 0 16px;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+section h2 .h2-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+section h2 .h2-title::before {
+  content: "";
+  width: 4px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ghost-btn {
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border-color-light);
+  color: var(--text-sub);
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.76rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 600;
+}
+.ghost-btn:hover {
+  border-color: var(--accent);
+  color: var(--text-main);
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.job-filter-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  margin-bottom: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.job-filter-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.slot {
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.slot.slot-hero {
+  border-color: rgba(240,195,76,0.35);
+  background: linear-gradient(180deg, rgba(240,195,76,0.05), var(--bg-panel-alt) 40%);
+}
+
+.slot-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.slot-label {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.slot-type-toggle {
+  display: flex;
+  border: 1px solid var(--border-color-light);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.slot-type-toggle button {
+  background: transparent;
+  border: none;
+  color: var(--text-faint);
+  font-size: 0.68rem;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.15s;
+}
+
+.slot-type-toggle button.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.slot-type-toggle button.active.hero-active {
+  background: var(--hero-accent);
+  color: #2b2205;
+}
+
+.combo-wrap {
+  position: relative;
+}
+
+.combo-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 0.92rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.combo-input:focus {
+  border-color: var(--accent);
+}
+
+.combo-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #1a1d23;
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-sm);
+  z-index: 30;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+.combo-list.open { display: block; }
+
+.combo-item {
+  padding: 9px 12px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: var(--text-sub);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.combo-item:last-child { border-bottom: none; }
+
+.combo-item:hover, .combo-item.active-hover {
+  background: var(--accent-soft);
+  color: var(--text-main);
+}
+
+.combo-item .dlc-badge {
+  font-size: 0.62rem;
+  background: #55360f;
+  color: #ffbf6b;
+  padding: 1px 6px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.combo-empty {
+  padding: 12px;
+  font-size: 0.82rem;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+.monster-info {
+  border-top: 1px dashed var(--border-color-light);
+  padding-top: 10px;
+  min-height: 30px;
+}
+
+.monster-info .placeholder {
+  color: var(--text-faint);
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 6px 0;
+}
+
+.monster-info-name {
+  font-weight: 700;
+  font-size: 1.02rem;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dlc-flag {
+  font-size: 0.62rem;
+  background: #55360f;
+  color: #ffbf6b;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.info-row {
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.info-row-label {
+  color: var(--text-faint);
+  margin-right: 6px;
+  font-size: 0.72rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  margin: 2px 4px 2px 0;
+  white-space: nowrap;
+}
+
+.tag-job { background: var(--tag-job-bg); color: var(--tag-job-text); }
+.tag-type { background: var(--tag-type-bg); color: var(--tag-type-text); }
+.tag-habitat { background: var(--tag-habitat-bg); color: var(--tag-habitat-text); }
+.tag-others { background: var(--tag-others-bg); color: var(--tag-others-text); }
+.tag-third { background: var(--tag-third-bg); color: var(--tag-third-text); }
+.tag-equip { background: var(--tag-equip-bg); color: var(--tag-equip-text); }
+
+.clear-slot-btn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 0.72rem;
+  cursor: pointer;
+  padding: 2px 0;
+  text-decoration: underline;
+}
+.clear-slot-btn:hover { color: var(--danger); }
+
+
+
+
+.hero-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hero-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-field label {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  font-weight: 600;
+}
+
+.hero-field input[type="text"],
+.hero-field select {
+  width: 100%;
+  padding: 9px 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 0.88rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.hero-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-faint) 50%), linear-gradient(135deg, var(--text-faint) 50%, transparent 50%);
+  background-position: calc(100% - 16px) center, calc(100% - 11px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 30px;
+}
+
+.hero-field input[type="text"]:focus,
+.hero-field select:focus {
+  border-color: var(--hero-accent);
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  background: var(--hero-soft);
+  color: var(--hero-accent);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.field-group label {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  font-weight: 600;
+}
+
+.field-group input[type="text"],
+.field-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 0.92rem;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.field-group input[type="text"]:focus,
+.field-group textarea:focus {
+  border-color: var(--accent);
+}
+
+.field-group textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.save-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.save-status {
+  font-size: 0.78rem;
+  color: var(--success);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.save-status.show { opacity: 1; }
+
+.save-status.error { color: var(--danger); }
+
+button.primary-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 11px 26px;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+button.primary-btn:hover { background: var(--accent-hover); }
+button.primary-btn:active { transform: scale(0.98); }
+button.primary-btn:disabled {
+  background: #34383f;
+  color: var(--text-faint);
+  cursor: not-allowed;
+}
+
+.toolbar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.search-saved {
+  flex: 1;
+  min-width: 160px;
+  padding: 9px 12px;
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 0.85rem;
+  outline: none;
+}
+.search-saved:focus { border-color: var(--accent); }
+
+.count-badge {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.party-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.party-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.15s, transform 0.1s;
+}
+.party-card:hover {
+  border-color: var(--border-color-light);
+}
+
+.party-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.party-card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  word-break: break-word;
+}
+
+.party-card-date {
+  font-size: 0.68rem;
+  color: var(--text-faint);
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+.party-members {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.party-member-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.85rem;
+  background: var(--bg-panel-alt);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.party-member-row.is-hero {
+  background: var(--hero-soft);
+  border: 1px solid rgba(240,195,76,0.3);
+}
+
+.party-member-num {
+  color: var(--text-faint);
+  font-size: 0.7rem;
+  width: 14px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.party-member-name {
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.party-member-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.hero-equip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+  font-size: 0.74rem;
+  color: var(--text-sub);
+}
+
+.hero-equip-list span.eq-label {
+  color: var(--text-faint);
+  margin-right: 4px;
+}
+
+.party-memo {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-top: 1px dashed var(--border-color-light);
+  padding-top: 8px;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.delete-btn {
+  background: none;
+  border: 1px solid var(--border-color-light);
+  color: var(--text-sub);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.delete-btn:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+
+.edit-btn {
+  background: none;
+  border: 1px solid var(--border-color-light);
+  color: var(--text-sub);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.edit-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.party-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.edit-mode-banner {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--accent-soft);
+  border: 1px solid rgba(91,141,239,0.4);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+}
+.edit-mode-banner.show { display: flex; }
+
+.dup-warning-banner {
+  display: none;
+  background: rgba(224,82,99,0.12);
+  border: 1px solid rgba(224,82,99,0.4);
+  color: var(--danger);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+}
+.dup-warning-banner.show { display: block; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-faint);
+  font-size: 0.88rem;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-color-light); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #4a4f5a; }
+
+@media (max-width: 600px) {
+  #app { padding: 14px 10px 60px; }
+  section { padding: 14px; }
+  header.top h1 { font-size: 1.25rem; }
+}
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.confirm-overlay.open { display: flex; }
+.confirm-box {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius);
+  padding: 22px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+}
+.confirm-box p {
+  font-size: 0.9rem;
+  margin: 0 0 18px;
+  color: var(--text-main);
+}
+.confirm-box .confirm-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.confirm-box button {
+  flex: 1;
+  padding: 9px 0;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+.confirm-cancel {
+  background: var(--bg-panel-alt);
+  color: var(--text-sub);
+  border: 1px solid var(--border-color-light) !important;
+}
+.confirm-delete {
+  background: var(--danger);
+  color: #fff;
+}
+.confirm-cancel:hover { background: var(--bg-card); }
+.confirm-delete:hover { background: var(--danger-hover); }
+
+#importFileInput { display: none; }
+
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header class="top">
+    <h1>DQMBV パーティ保存ツール</h1>
+    <p>ドラゴンクエストモンスターズ バトルロードビクトリー 相性チェック &amp; パーティ管理</p>
+  </header>
+
+  <section>
+    <h2>
+      <span class="h2-title">パーティ編成</span>
+    </h2>
+    <label class="job-filter-toggle">
+      <input type="checkbox" id="jobFilterCheckbox" checked>
+      <span>職業と相性があるモンスターのみ表示</span>
+    </label>
+    <div class="slot-grid" id="slotGrid"></div>
+  </section>
+
+  <section>
+    <h2>
+      <span class="h2-title">パーティ情報</span>
+    </h2>
+    <div class="edit-mode-banner" id="editModeBanner">
+      <span>編集中のパーティを更新します</span>
+      <button type="button" class="ghost-btn" id="cancelEditBtn">編集をやめる</button>
+    </div>
+    <div class="dup-warning-banner" id="dupWarningBanner">※同じモンスターが重複して選択されています</div>
+    <div class="field-group">
+      <label for="partyNameInput">パーティ名</label>
+      <input type="text" id="partyNameInput" placeholder="例：草原/森魔法使い" maxlength="60">
+    </div>
+    <div class="field-group">
+      <label for="partyMemoInput">メモ</label>
+      <textarea id="partyMemoInput" placeholder="編成のねらいや戦術メモなど自由にどうぞ" maxlength="1000"></textarea>
+    </div>
+    <div class="save-btn-row">
+      <span class="save-status" id="saveStatus"></span>
+      <button class="primary-btn" id="saveBtn">保存する</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>
+      <span class="h2-title">保存済みパーティ一覧</span>
+      <span class="header-actions">
+        <button class="ghost-btn" id="exportBtn">JSONエクスポート</button>
+        <button class="ghost-btn" id="importBtn">JSONインポート</button>
+        <input type="file" id="importFileInput" accept="application/json,.json">
+      </span>
+    </h2>
+    <div class="toolbar-row">
+      <input type="text" class="search-saved" id="searchSaved" placeholder="パーティ名・モンスター名で検索">
+      <span class="count-badge" id="countBadge">0件保存中</span>
+    </div>
+    <div id="partyListWrap"></div>
+  </section>
+
+  <footer class="app-footer">
+    <button type="button" class="credit-link" id="creditLinkBtn">謝辞・データ出典</button>
+  </footer>
+</div>
+
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <p id="confirmText">このパーティを削除しますか？</p>
+    <div class="confirm-buttons">
+      <button class="confirm-cancel" id="confirmCancelBtn">キャンセル</button>
+      <button class="confirm-delete" id="confirmDeleteBtn">削除する</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-overlay" id="creditOverlay">
+  <div class="confirm-box credit-box">
+    <h3 class="credit-title">データ出典・謝辞</h3>
+    <p class="credit-text">本ツールのデータ作成にあたり、有志の皆様が公開・蓄積されてきた情報や検証データを参考にさせていただきました。<br><br>長年にわたり作品を盛り上げ、貴重な情報を遺してくださったすべてのプレイヤー・ファンコミュニティの皆様に心より感謝申し上げます。</p>
+    <p class="credit-disclaimer">※本ツールは個人による非公式のファンツールであり、公式・関係各所とは一切関係ありません。</p>
+    <div class="confirm-buttons">
+      <button class="confirm-cancel" id="creditCloseBtn">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MONSTER_DATA = {"スライム":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["勇者"]},"スライムベス":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["森/ダンジョン"],"others":["ミニ（HPアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["賢者"]},"メタルスライム":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"ドラキー":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["賢者"]},"タホドラキー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["森/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"ゴーレム":{"isDLC":false,"job":["武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["戦士"]},"ストーンマン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["バトルマスター"]},"ゴールドマン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["草原/荒野"],"others":[],"thirdSkillJob":["勇者"]},"スライムナイト":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/森"],"others":["モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["魔法使い"]},"ミミック":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"ホイミスライム":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）","飛行（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"バル":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/荒野"],"others":["モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["バトルマスター"]},"ベル":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）","メカ（すばやさアップ）"],"habitat":["草原/荒野"],"others":[],"thirdSkillJob":["武闘家"]},"ボル＆ブル":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/荒野"],"others":[],"thirdSkillJob":["戦士"]},"さまようよろい":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["魔法使い"]},"ぼうれい剣士":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":[],"thirdSkillJob":["勇者"]},"ギガンテス":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["山/ダンジョン","ロンダルキア"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["魔法使い"]},"うごくせきぞう":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["戦士"]},"キラーマシン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["メカ（すばやさアップ）"],"habitat":["草原/山"],"others":[],"thirdSkillJob":["武闘家"]},"おどる宝石":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","状態異常（すばやさアップ）","モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["魔法使い"]},"ベビーサタン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["勇者"]},"じんめんじゅ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/森"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"しにがみきぞく":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":[],"thirdSkillJob":["賢者"]},"スカルライダー":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":[],"thirdSkillJob":["戦士"]},"プチアーノン":{"isDLC":false,"job":["僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["海"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["バトルマスター"]},"マドハンド":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["どくの沼地"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["バトルマスター"]},"いばらドラゴン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）","ドラゴン（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":[],"thirdSkillJob":["僧侶"]},"おばけきのこ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/森"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"バーサーカー":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["勇者"]},"キラーパンサー":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":[],"thirdSkillJob":["勇者"]},"サイレス":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":[],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"くさった死体":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）","人型（ちからアップ）"],"habitat":["どくの沼地"],"others":[],"thirdSkillJob":["バトルマスター"]},"おおきづち":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/ダンジョン"],"others":["ミニ（HPアップ）","補助効果（すばやさアップ）","一発屋（ちからアップ）","モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["勇者"]},"オーク":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["勇者"]},"海竜":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["海"],"others":["ビッグ（ちからアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"キメラ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/山"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["僧侶"]},"バトルレックス":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["草原/山"],"others":[],"thirdSkillJob":["戦士"]},"ヘルパイレーツ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["海"],"others":[],"thirdSkillJob":["僧侶"]},"リリパット":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"ドラキーマ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"ひとくいばこ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["魔法使い"]},"はぐれメタル":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/ダンジョン"],"others":[],"thirdSkillJob":["戦士"]},"プリズニャン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["バトルマスター"]},"ドラゴン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["勇者"]},"きめんどうし":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"メタルライダー":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/荒野"],"others":[],"thirdSkillJob":["武闘家"]},"ボストロール":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["ビッグ（ちからアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["僧侶"]},"メタッピー":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["メカ（すばやさアップ）","飛行（かしこさアップ）"],"habitat":["草原/山"],"others":[],"thirdSkillJob":["僧侶"]},"あくましんかん":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["僧侶"]},"パンドラボックス":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":["状態異常（すばやさアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["賢者"]},"キラーマシン2":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["メカ（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"デンデン竜":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["草原/荒野"],"others":[],"thirdSkillJob":["戦士"]},"死霊の騎士":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["どくの沼地"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["魔法使い"]},"アークデーモン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/ダンジョン","ロンダルキア"],"others":["ビッグ（ちからアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"キラーマシン3":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["メカ（すばやさアップ）"],"habitat":["荒野/ダンジョン"],"others":[],"thirdSkillJob":["武闘家"]},"どろにんぎょう":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"あやしいかげ":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["武闘家"]},"メタルキング":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["森/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["戦士"]},"かくとうパンサー":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["武闘家"]},"マミー":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":[],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["戦士"]},"ダークランサー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["荒野/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"シルバーデビル":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）","悪魔（かしこさアップ）"],"habitat":["草原/山","ロンダルキア"],"others":[],"thirdSkillJob":["バトルマスター"]},"だいまどう":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":["呪文（かしこさアップ）","モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["魔法使い"]},"スターキメラ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"キースドラゴン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["武闘家"]},"ダースドラゴン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":[],"thirdSkillJob":["戦士"]},"シールドこぞう":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","補助効果（すばやさアップ）","モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["僧侶"]},"エビルスピリッツ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"イエティ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/山"],"others":[],"thirdSkillJob":["魔法使い"]},"よるのていおう":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/森"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"炎の戦士":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":["モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["武闘家"]},"アンクルホーン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"さそりアーマー":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["どくの沼地"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"プテラノドン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"マネマネ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"ラリホービートル":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"ポイズンリザード":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":[],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"デュラハーン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"あばれうしどり":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["戦士"]},"オーシャンクロー":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["海"],"others":[],"thirdSkillJob":["武闘家"]},"ひとつめピエロ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","状態異常（すばやさアップ）","モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["魔法使い"]},"ばくだんいわ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/荒野"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"ダンビラムーチョ":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/荒野"],"others":["呪文（かしこさアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["勇者"]},"メーダ":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）","飛行（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["武闘家"]},"ゴースト":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"いわとびあくま":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）","悪魔（かしこさアップ）"],"habitat":["海"],"others":["モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["僧侶"]},"コドラ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["草原/山"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["魔法使い"]},"かぶとこぞう":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/森"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["勇者"]},"ライノソルジャー":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["森/荒野"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["戦士"]},"スライムつむり":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）","物質（みのまもりアップ）"],"habitat":["海"],"others":["ミニ（HPアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"メイジキメラ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/山"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["バトルマスター"]},"べレス":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["魔法使い"]},"いたずらモグラ":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":["ミニ（HPアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["戦士"]},"アームライオン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["武闘家"]},"ももんじゃ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["戦士"]},"しにがみのきし":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"てっきゅうまじん":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["魔法使い"]},"おおめだま":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["どくの沼地"],"others":["呪文（かしこさアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"ガーゴイル":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）","飛行（かしこさアップ）"],"habitat":["草原/山"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"カロン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"コングヘッド":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["武闘家"]},"ひとくいサーベル":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"ブリザードマン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["戦士"]},"シールドヒッポ":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"きとうし":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["森/荒野"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"サイコロン":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/山"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["武闘家"]},"ドラゴンライダー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）","飛行（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["僧侶"]},"ピクシー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["武闘家"]},"シャドーサタン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"ホースデビル":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["どくの沼地"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["武闘家"]},"マンドレイク":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["戦士"]},"しにがみ":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["僧侶"]},"メタルドラゴン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）","メカ（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"ソルジャーブル":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/山"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["戦士"]},"クックルー":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"ドラゴンキッズ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["森/荒野"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["勇者"]},"びっくりサタン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["森/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["バトルマスター"]},"おばけキャンドル":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["僧侶"]},"ずしおうまる":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":["ビッグ（ちからアップ）","状態異常（すばやさアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["勇者"]},"ビックアイ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/山"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["僧侶"]},"ドラゴンゾンビ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）","不死（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"エリミネーター":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["荒野/ダンジョン"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["勇者"]},"レッサーデーモン":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["森/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"スモールグール":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/ダンジョン"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"グレムリン":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）","飛行（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"アンデッドマン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["どくの沼地"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"リザードマン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/ダンジョン"],"others":[],"thirdSkillJob":["魔法使い"]},"しのどれい":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["どくの沼地"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"イーブルフライ":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）","飛行（かしこさアップ）"],"habitat":["どくの沼地"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"シャーマン":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["バトルマスター"]},"ダッシュラン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["草原/森"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["戦士"]},"ギズモ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"きりかぶこぞう":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["僧侶"]},"ファーラット":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"れんごくちょう":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"グレートオーラス":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["海"],"others":["ビッグ（ちからアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["僧侶"]},"ねこまどう":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"キャタピラー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/森"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["魔法使い"]},"シールドオーガ":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/ダンジョン"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["僧侶"]},"ぐんたいガニ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["海"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"アルミラージ":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["勇者"]},"なげきのぼうれい":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"ごろつき":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["賢者"]},"プロトキラー":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["メカ（すばやさアップ）"],"habitat":["草原/森"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["勇者"]},"きりさきピエロ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["勇者"]},"キャットフライ":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）","飛行（かしこさアップ）"],"habitat":["草原/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"ナイトリッチ":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["バトルマスター"]},"ドロヌーバ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["どくの沼地"],"others":[],"thirdSkillJob":["武闘家"]},"デビルアーマー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"モーモン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"アルゴリザード":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["森/荒野"],"others":["ビッグ（ちからアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"パペットこぞう":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["荒野/ダンジョン"],"others":[],"thirdSkillJob":["勇者"]},"メタルハンター":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["メカ（すばやさアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["戦士"]},"デスストーカー":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"デスゴーゴン":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["賢者"]},"サーベルきつね":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["荒野/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["戦士"]},"デンタザウルス":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["ビッグ（ちからアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["バトルマスター"]},"へルビースト":{"isDLC":false,"job":["魔法使い（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"さそりばち":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["昆虫（ちからアップ）","飛行（かしこさアップ）"],"habitat":["草原/森"],"others":[],"thirdSkillJob":["バトルマスター"]},"ゴールデンゴーレム":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["ビッグ（ちからアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["僧侶"]},"ポンポコだぬき":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["勇者"]},"かまっち":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/荒野"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"スライムタワー":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/森"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["勇者"]},"悪魔の騎士":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["武闘家"]},"キラーリカント":{"isDLC":true,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"影の騎士":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"アトラス":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["戦士"]},"バズズ":{"isDLC":true,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）","悪魔（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["武闘家"]},"ベリアル":{"isDLC":true,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["ビッグ（ちからアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"ミイラおとこ":{"isDLC":true,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["草原/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"トロルキング":{"isDLC":true,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["森/荒野"],"others":["ビッグ（ちからアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["戦士"]},"だいまじん":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["草原/荒野"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"キングレオ":{"isDLC":true,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["武闘家"]},"ヘルバトラー":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["森/荒野"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"エビルプリースト":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["山/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"ジャミ":{"isDLC":true,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["魔法使い"]},"ゴンズ":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"ゲレゲレ":{"isDLC":true,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":[],"thirdSkillJob":["武闘家"]},"悪魔のかがみ":{"isDLC":true,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/荒野"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"まおうの使い":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["草原/荒野"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"ドランゴ":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["草原/森"],"others":[],"thirdSkillJob":["戦士"]},"ゴールデンスライム":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/荒野"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["賢者"]},"オーガキング":{"isDLC":true,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/山"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"まかいじゅう":{"isDLC":true,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["荒野/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["魔法使い"]},"じごくのよろい":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["戦士"]},"ゲモン":{"isDLC":true,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"やみのしさい":{"isDLC":true,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["僧侶"]},"ゴールドタヌ":{"isDLC":true,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/ダンジョン"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"アイスビックル":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["海"],"others":[],"thirdSkillJob":["武闘家"]},"ゴールデントーテム":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/ダンジョン"],"others":[],"thirdSkillJob":["賢者"]}};
+const ITEM_DATA = {"weapons":["あくまのツメ","アサシンダガー","いかずちの杖","うみなりの杖","おうごんのツメ","王者の剣","オリハルコンのツメ","きせきのつるぎ","ぎんがのつるぎ","キングアックス","グレートアックス","賢者の杖","賢者の杖（青）","賢者の杖（赤）","賢者の杖（オレンジ）","賢者の杖（黒）","賢者の杖（白）","賢者の杖（灰色）","賢者の杖（水色）","賢者の杖（緑）","さばきの杖","さんぞくのオノ","斬魔刀","疾風のレイピア","しゅくふくの杖","死霊のツメ","神竜のつるぎ","ソードブレイカー","てつのツメ","てつのつるぎ","天空のつるぎ","天帝のつるぎ","てんばつの杖","どくがのナイフ","どくばり","ドラゴンキラー","ドラゴンの杖","ねむりの杖","はおうのオノ","はかいのつるぎ","はがねのつるぎ","はじゃのつるぎ","はやぶさの剣・改","はやぶさのツメ","ひかりの杖","風林火山","ふぶきのオノ","プラチナソード","ほしくだき","マグマの杖","マジカルメイス","まじゅうのツメ","まじんのオノ","まどうしの杖","まどろみの剣","まふうじの杖","メガトンハンマー","メタルウィング","メタルキングの剣","メタルキングのヤリ","ゆうわくの剣","竜王のツメ","竜神王の剣","竜神王の剣・弐の太刀","りりょくの杖","ルーンスタッフ"],"shields":["おなべのフタ","せいどうのたて","まほうのたて","みかがみのたて","しにがみのたて","メタルキングのたて","聖女のたて","ドラゴンシールド","勇者のたて","天空のたて","竜神のたて","スライムトレイ","ウロボロスのたて"],"armors":["たびびとのふく","はがねのよろい","まじんのよろい","まほうのよろい","しんぴのよろい","竜神のよろい","メタルキングよろい","天空のよろい","光のよろい","竜戦士のよろい","しんわのよろい","まどうしのローブ","まほうの法衣","やすらぎのローブ","光のドレス","天使のローブ","ダークローブ","賢者のローブ","ドラゴンローブ","セラフィムのローブ","ぶとうぎ","みかわしのふく","毛皮のポンチョ","しのびのふく","不思議なボレロ","闇の衣","そうてんのトーガ"]};
+const MONSTER_NAMES = Object.keys(MONSTER_DATA).sort((a, b) => a.localeCompare(b, 'ja'));
+const HERO_JOBS = ['戦士', '武闘家', '魔法使い', '僧侶', 'バトルマスター', '賢者', '勇者'];
+const STORAGE_KEY = 'dqmbv_saved_parties_v2';
+const OLD_STORAGE_KEY = 'dqmbv_saved_parties_v1';
+
+// state.slots[i] = { kind: 'monster', name: '...' } または { kind: 'hero', job: '', weapon: '', shield: '', armor: '' } または null
+const state = {
+  slots: [null, null, null],
+  parties: []
+};
+
+let editingPartyId = null;
+
+function makeEmptyHero() {
+  return { kind: 'hero', job: '', weapon: '', shield: '', armor: '' };
+}
+
+function migrateOldData() {
+  try {
+    const raw = localStorage.getItem(OLD_STORAGE_KEY);
+    if (!raw) return [];
+    const oldParties = JSON.parse(raw);
+    return oldParties.map(p => ({
+      id: p.id,
+      name: p.name,
+      memo: p.memo,
+      createdAt: p.createdAt,
+      slots: (p.members || []).map(m => m ? { kind: 'monster', name: m } : null)
+    }));
+  } catch (e) {
+    return [];
+  }
+}
+
+function loadParties() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      state.parties = JSON.parse(raw);
+    } else {
+      const migrated = migrateOldData();
+      state.parties = migrated;
+      if (migrated.length > 0) persistParties();
+    }
+  } catch (e) {
+    state.parties = [];
+  }
+}
+
+function persistParties() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.parties));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderTagList(arr, cls) {
+  if (!arr || arr.length === 0) return '<span class="info-row-label" style="opacity:0.5;">なし</span>';
+  return arr.map(t => `<span class="tag ${cls}">${escapeHtml(t)}</span>`).join('');
+}
+
+function buildMonsterInfoHtml(name) {
+  const data = MONSTER_DATA[name];
+  if (!data) return '';
+  return `
+    <div class="monster-info-name">
+      ${escapeHtml(name)}
+      ${data.isDLC ? '<span class="dlc-flag">DLC</span>' : ''}
+    </div>
+    <div class="info-row"><span class="info-row-label">職業</span>${renderTagList(data.job, 'tag-job')}</div>
+    <div class="info-row"><span class="info-row-label">タイプ</span>${renderTagList(data.type, 'tag-type')}</div>
+    <div class="info-row"><span class="info-row-label">生息地</span>${renderTagList(data.habitat, 'tag-habitat')}</div>
+    <div class="info-row"><span class="info-row-label">その他</span>${renderTagList(data.others, 'tag-others')}</div>
+    <div class="info-row"><span class="info-row-label">第3のワザ</span>${renderTagList(data.thirdSkillJob, 'tag-third')}</div>
+  `;
+}
+
+function buildMonsterInfoHtmlCompact(name) {
+  const data = MONSTER_DATA[name];
+  if (!data) return `<div class="party-member-name">${escapeHtml(name)}</div>`;
+  const tags = [
+    ...(data.job || []).map(t => `<span class="tag tag-job">${escapeHtml(t)}</span>`),
+    ...(data.type || []).map(t => `<span class="tag tag-type">${escapeHtml(t)}</span>`)
+  ].join('');
+  return `
+    <div style="flex:1;min-width:0;">
+      <div class="party-member-name">${escapeHtml(name)}${data.isDLC ? ' <span class="dlc-flag">DLC</span>' : ''}</div>
+      <div class="party-member-tags">${tags}</div>
+    </div>
+  `;
+}
+
+function buildJobOptions(selected) {
+  let html = `<option value="">選択しない</option>`;
+  HERO_JOBS.forEach(job => {
+    html += `<option value="${escapeHtml(job)}" ${job === selected ? 'selected' : ''}>${escapeHtml(job)}</option>`;
+  });
+  return html;
+}
+
+// 武器・盾・鎧の検索付きコンボ欄（モンスター選択枠と同様のUI）
+function buildItemComboHtml(slotIdx, field, label, currentValue) {
+  return `
+    <div class="hero-field">
+      <label>${label}</label>
+      <div class="combo-wrap item-combo-wrap" data-slot="${slotIdx}" data-field="${field}">
+        <input type="text" class="combo-input item-combo-input" placeholder="${label}を検索..." autocomplete="off"
+          data-slot="${slotIdx}" data-field="${field}" value="${escapeHtml(currentValue || '')}">
+        <div class="combo-list item-combo-list" data-slot="${slotIdx}" data-field="${field}"></div>
+      </div>
+    </div>
+  `;
+}
+
+function buildHeroFormHtml(slotIdx, hero) {
+  return `
+    <div class="hero-form" data-slot="${slotIdx}">
+      <div class="hero-field">
+        <label>職業</label>
+        <select class="hero-job-select" data-slot="${slotIdx}">
+          ${buildJobOptions(hero.job)}
+        </select>
+      </div>
+      ${buildItemComboHtml(slotIdx, 'weapon', '武器', hero.weapon)}
+      ${buildItemComboHtml(slotIdx, 'shield', '盾', hero.shield)}
+      ${buildItemComboHtml(slotIdx, 'armor', '鎧', hero.armor)}
+    </div>
+  `;
+}
+
+function renderSlots() {
+  const grid = document.getElementById('slotGrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const slotData = state.slots[i];
+    const isHero = slotData && slotData.kind === 'hero';
+    const isMonster = slotData && slotData.kind === 'monster';
+    const canBeHero = (i === 0);
+
+    const slot = document.createElement('div');
+    slot.className = 'slot' + (isHero ? ' slot-hero' : '');
+
+    let toggleHtml = '';
+    if (canBeHero) {
+      toggleHtml = `
+        <div class="slot-type-toggle" data-slot="${i}">
+          <button type="button" class="type-btn ${isMonster || !slotData ? 'active' : ''}" data-slot="${i}" data-kind="monster">モンスター</button>
+          <button type="button" class="type-btn ${isHero ? 'active hero-active' : ''}" data-slot="${i}" data-kind="hero">主人公</button>
+        </div>
+      `;
+    }
+
+    let bodyHtml = '';
+    if (isHero) {
+      bodyHtml = buildHeroFormHtml(i, slotData);
+    } else {
+      const currentName = isMonster ? slotData.name : '';
+      bodyHtml = `
+        <div class="combo-wrap monster-combo-wrap" data-slot="${i}">
+          <input type="text" class="combo-input monster-combo-input" placeholder="モンスター名で検索..." autocomplete="off" data-slot="${i}" value="${escapeHtml(currentName)}">
+          <div class="combo-list monster-combo-list" data-slot="${i}"></div>
+        </div>
+        <div class="monster-info" data-slot="${i}">
+          ${currentName ? buildMonsterInfoHtml(currentName) : '<div class="placeholder">モンスターを選択してください</div>'}
+        </div>
+        ${currentName ? `<button class="clear-slot-btn" data-slot="${i}">選択解除</button>` : ''}
+      `;
+    }
+
+    slot.innerHTML = `
+      <div class="slot-label-row">
+        <div class="slot-label">${isHero ? '主人公' : 'モンスター'} ${i + 1}</div>
+      </div>
+      ${toggleHtml}
+      ${bodyHtml}
+    `;
+    grid.appendChild(slot);
+  }
+  attachSlotEvents();
+  updateDupWarningUI();
+}
+
+function attachSlotEvents() {
+  document.querySelectorAll('.type-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const slot = parseInt(btn.dataset.slot, 10);
+      const kind = btn.dataset.kind;
+      if (kind === 'hero') {
+        state.slots[slot] = makeEmptyHero();
+      } else {
+        state.slots[slot] = null;
+      }
+      renderSlots();
+    });
+  });
+
+  document.querySelectorAll('.monster-combo-input').forEach(input => {
+    input.addEventListener('input', onComboInput);
+    input.addEventListener('focus', onComboInput);
+    input.addEventListener('blur', () => {
+      setTimeout(() => {
+        const list = document.querySelector(`.monster-combo-list[data-slot="${input.dataset.slot}"]`);
+        if (list) list.classList.remove('open');
+      }, 150);
+    });
+  });
+
+  document.querySelectorAll('.clear-slot-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const slot = parseInt(btn.dataset.slot, 10);
+      state.slots[slot] = null;
+      renderSlots();
+    });
+  });
+
+  document.querySelectorAll('.hero-job-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const slot = parseInt(sel.dataset.slot, 10);
+      if (state.slots[slot] && state.slots[slot].kind === 'hero') {
+        state.slots[slot].job = sel.value;
+      }
+    });
+  });
+
+  document.querySelectorAll('.item-combo-input').forEach(input => {
+    input.addEventListener('input', onItemComboInput);
+    input.addEventListener('focus', onItemComboInput);
+    input.addEventListener('blur', () => {
+      setTimeout(() => {
+        const slot = input.dataset.slot;
+        const field = input.dataset.field;
+        const list = document.querySelector(`.item-combo-list[data-slot="${slot}"][data-field="${field}"]`);
+        if (list) list.classList.remove('open');
+        // 手入力のまま確定した場合も値を反映する（候補選択と併用）
+        const s = state.slots[parseInt(slot, 10)];
+        if (s && s.kind === 'hero') {
+          s[field] = input.value.trim();
+        }
+      }, 150);
+    });
+  });
+}
+
+const ITEM_FIELD_LIST = {
+  weapon: ITEM_DATA.weapons,
+  shield: ITEM_DATA.shields,
+  armor: ITEM_DATA.armors
+};
+
+function onItemComboInput(e) {
+  const slot = parseInt(e.target.dataset.slot, 10);
+  const field = e.target.dataset.field;
+  const query = e.target.value.trim();
+  const list = document.querySelector(`.item-combo-list[data-slot="${slot}"][data-field="${field}"]`);
+  const sourceList = ITEM_FIELD_LIST[field] || [];
+  let matches;
+  if (!query) {
+    matches = sourceList;
+  } else {
+    matches = sourceList.filter(n => n.includes(query));
+  }
+  if (matches.length === 0) {
+    list.innerHTML = '<div class="combo-empty">該当するアイテムが見つかりません</div>';
+  } else {
+    list.innerHTML = matches.map(n => `<div class="combo-item item-combo-item" data-name="${escapeHtml(n)}" data-slot="${slot}" data-field="${field}"><span>${escapeHtml(n)}</span></div>`).join('');
+  }
+  list.classList.add('open');
+  list.querySelectorAll('.item-combo-item').forEach(item => {
+    item.addEventListener('mousedown', (ev) => {
+      ev.preventDefault();
+      const name = item.dataset.name;
+      if (state.slots[slot] && state.slots[slot].kind === 'hero') {
+        state.slots[slot][field] = name;
+      }
+      renderSlots();
+    });
+  });
+}
+
+function getSelectedMonsterNames(excludeSlot) {
+  const names = [];
+  state.slots.forEach((s, idx) => {
+    if (idx === excludeSlot) return;
+    if (s && s.kind === 'monster' && s.name) names.push(s.name);
+  });
+  return names;
+}
+
+// モンスターのjob配列は「戦士（ちからアップ）」のような形式なので、括弧前の職業名だけを取り出す
+function getMonsterBaseJobs(name) {
+  const data = MONSTER_DATA[name];
+  if (!data || !data.job) return [];
+  return data.job.map(j => j.split('（')[0]);
+}
+
+// 現在のヒーロー職業による絞り込みが有効かどうか、絞り込むべき職業名を判定する
+function getActiveJobFilter() {
+  const checkbox = document.getElementById('jobFilterCheckbox');
+  if (!checkbox || !checkbox.checked) return null;
+
+  // 1枠目が主人公で職業が選択されている場合のみ絞り込み対象
+  const heroSlot = state.slots[0];
+  if (!heroSlot || heroSlot.kind !== 'hero') return null;
+  const job = heroSlot.job;
+  if (!job) return null;
+  // 勇者はすべてのモンスターと相性が発生するため絞り込み対象外
+  if (job === '勇者') return null;
+
+  return job;
+}
+
+function getFilteredMonsterNames(query) {
+  let pool = MONSTER_NAMES;
+  if (query) {
+    pool = pool.filter(n => n.includes(query));
+  }
+  const jobFilter = getActiveJobFilter();
+  if (jobFilter) {
+    pool = pool.filter(n => getMonsterBaseJobs(n).includes(jobFilter));
+  }
+  return pool;
+}
+
+function onComboInput(e) {
+  const slot = parseInt(e.target.dataset.slot, 10);
+  const query = e.target.value.trim();
+  const list = document.querySelector(`.monster-combo-list[data-slot="${slot}"]`);
+  const matches = getFilteredMonsterNames(query);
+  const selectedElsewhere = getSelectedMonsterNames(slot);
+  if (matches.length === 0) {
+    list.innerHTML = '<div class="combo-empty">該当するモンスターが見つかりません</div>';
+  } else {
+    list.innerHTML = matches.map(n => {
+      const d = MONSTER_DATA[n];
+      const isDup = selectedElsewhere.includes(n);
+      return `<div class="combo-item" data-name="${escapeHtml(n)}" data-slot="${slot}">
+        <span>${escapeHtml(n)}${isDup ? '（選択済み）' : ''}</span>
+        ${d.isDLC ? '<span class="dlc-badge">DLC</span>' : ''}
+      </div>`;
+    }).join('');
+  }
+  list.classList.add('open');
+  list.querySelectorAll('.combo-item').forEach(item => {
+    item.addEventListener('mousedown', (ev) => {
+      ev.preventDefault();
+      const name = item.dataset.name;
+      state.slots[slot] = { kind: 'monster', name };
+      renderSlots();
+    });
+  });
+}
+
+
+
+
+function buildHeroCompactHtml(hero) {
+  const equips = [];
+  if (hero.weapon) equips.push(`<div><span class="eq-label">武器</span>${escapeHtml(hero.weapon)}</div>`);
+  if (hero.shield) equips.push(`<div><span class="eq-label">盾</span>${escapeHtml(hero.shield)}</div>`);
+  if (hero.armor) equips.push(`<div><span class="eq-label">鎧</span>${escapeHtml(hero.armor)}</div>`);
+  return `
+    <div style="flex:1;min-width:0;">
+      <div class="party-member-name">
+        ${hero.job ? escapeHtml(hero.job) : '主人公'}
+        <span class="hero-badge">主人公</span>
+      </div>
+      ${equips.length ? `<div class="hero-equip-list">${equips.join('')}</div>` : '<div class="hero-equip-list" style="opacity:0.5;">装備未設定</div>'}
+    </div>
+  `;
+}
+
+function renderPartyList() {
+  const wrap = document.getElementById('partyListWrap');
+  const countBadge = document.getElementById('countBadge');
+  const searchTerm = document.getElementById('searchSaved').value.trim().toLowerCase();
+
+  let filtered = state.parties;
+  if (searchTerm) {
+    filtered = state.parties.filter(p => {
+      const inName = p.name.toLowerCase().includes(searchTerm);
+      const inMembers = (p.slots || []).some(s => {
+        if (!s) return false;
+        if (s.kind === 'monster') return s.name.toLowerCase().includes(searchTerm);
+        if (s.kind === 'hero') return (s.job || '').toLowerCase().includes(searchTerm) || '主人公'.includes(searchTerm);
+        return false;
+      });
+      const inMemo = (p.memo || '').toLowerCase().includes(searchTerm);
+      return inName || inMembers || inMemo;
+    });
+  }
+
+  countBadge.textContent = `${state.parties.length}件保存中`;
+
+  if (filtered.length === 0) {
+    wrap.innerHTML = `<div class="empty-state">${state.parties.length === 0 ? '保存されたパーティはまだありません。上のフォームから編成して保存しましょう。' : '検索条件に一致するパーティが見つかりません。'}</div>`;
+    return;
+  }
+
+  const sorted = [...filtered].sort((a, b) => b.createdAt - a.createdAt);
+
+  wrap.innerHTML = `<div class="party-list">${sorted.map(p => `
+    <div class="party-card" data-id="${p.id}">
+      <div class="party-card-header">
+        <div class="party-card-title">${escapeHtml(p.name)}</div>
+        <div class="party-card-date">${formatDate(p.createdAt)}</div>
+      </div>
+      <div class="party-members">
+        ${(p.slots || []).map((s, idx) => {
+          if (!s) {
+            return `
+              <div class="party-member-row" style="opacity:0.4;">
+                <span class="party-member-num">${idx + 1}</span>
+                <span>（未選択）</span>
+              </div>
+            `;
+          }
+          if (s.kind === 'hero') {
+            return `
+              <div class="party-member-row is-hero">
+                <span class="party-member-num">${idx + 1}</span>
+                ${buildHeroCompactHtml(s)}
+              </div>
+            `;
+          }
+          return `
+            <div class="party-member-row">
+              <span class="party-member-num">${idx + 1}</span>
+              ${buildMonsterInfoHtmlCompact(s.name)}
+            </div>
+          `;
+        }).join('')}
+      </div>
+      ${p.memo ? `<div class="party-memo">${escapeHtml(p.memo)}</div>` : ''}
+      <div class="party-card-actions">
+        <button class="edit-btn" data-id="${p.id}">編集</button>
+        <button class="delete-btn" data-id="${p.id}">削除</button>
+      </div>
+    </div>
+  `).join('')}</div>`;
+
+  wrap.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      showConfirm(btn.dataset.id);
+    });
+  });
+
+  wrap.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      enterEditMode(btn.dataset.id);
+    });
+  });
+}
+
+function enterEditMode(id) {
+  const party = state.parties.find(p => p.id === id);
+  if (!party) return;
+
+  editingPartyId = id;
+  document.getElementById('partyNameInput').value = party.name || '';
+  document.getElementById('partyMemoInput').value = party.memo || '';
+
+  const slots = (party.slots || []).map(s => {
+    if (!s) return null;
+    if (s.kind === 'hero') {
+      return { kind: 'hero', job: s.job || '', weapon: s.weapon || '', shield: s.shield || '', armor: s.armor || '' };
+    }
+    if (s.kind === 'monster' && s.name) {
+      return { kind: 'monster', name: s.name };
+    }
+    return null;
+  });
+  while (slots.length < 3) slots.push(null);
+  state.slots = slots.slice(0, 3);
+
+  renderSlots();
+  updateEditModeUI();
+
+  document.querySelector('section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function exitEditMode() {
+  editingPartyId = null;
+  updateEditModeUI();
+}
+
+function updateEditModeUI() {
+  const banner = document.getElementById('editModeBanner');
+  const saveBtn = document.getElementById('saveBtn');
+  if (editingPartyId) {
+    banner.classList.add('show');
+    saveBtn.textContent = '更新する';
+  } else {
+    banner.classList.remove('show');
+    saveBtn.textContent = '保存する';
+  }
+}
+
+document.getElementById('cancelEditBtn').addEventListener('click', () => {
+  exitEditMode();
+  document.getElementById('partyNameInput').value = '';
+  document.getElementById('partyMemoInput').value = '';
+  state.slots = [null, null, null];
+  renderSlots();
+});
+
+function formatDate(ts) {
+  const d = new Date(ts);
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+let pendingDeleteId = null;
+
+function showConfirm(id) {
+  pendingDeleteId = id;
+  const party = state.parties.find(p => p.id === id);
+  document.getElementById('confirmText').textContent = party ? `「${party.name}」を削除しますか？` : 'このパーティを削除しますか？';
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+
+function hideConfirm() {
+  pendingDeleteId = null;
+  document.getElementById('confirmOverlay').classList.remove('open');
+}
+
+document.getElementById('confirmCancelBtn').addEventListener('click', hideConfirm);
+document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+  if (pendingDeleteId) {
+    state.parties = state.parties.filter(p => p.id !== pendingDeleteId);
+    persistParties();
+    if (editingPartyId === pendingDeleteId) {
+      exitEditMode();
+      document.getElementById('partyNameInput').value = '';
+      document.getElementById('partyMemoInput').value = '';
+      state.slots = [null, null, null];
+      renderSlots();
+    }
+    renderPartyList();
+  }
+  hideConfirm();
+});
+document.getElementById('confirmOverlay').addEventListener('click', (e) => {
+  if (e.target.id === 'confirmOverlay') hideConfirm();
+});
+
+function showSaveStatus(message, isError) {
+  const el = document.getElementById('saveStatus');
+  el.textContent = message;
+  el.classList.toggle('error', !!isError);
+  el.classList.add('show');
+  clearTimeout(showSaveStatus._t);
+  showSaveStatus._t = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+function isSlotFilled(s) {
+  if (!s) return false;
+  if (s.kind === 'monster') return !!s.name;
+  if (s.kind === 'hero') return true;
+  return false;
+}
+
+function findDuplicateMonsterName() {
+  const names = state.slots
+    .filter(s => s && s.kind === 'monster' && s.name)
+    .map(s => s.name);
+  const seen = new Set();
+  for (const n of names) {
+    if (seen.has(n)) return n;
+    seen.add(n);
+  }
+  return null;
+}
+
+function updateDupWarningUI() {
+  const banner = document.getElementById('dupWarningBanner');
+  const saveBtn = document.getElementById('saveBtn');
+  const hasDup = !!findDuplicateMonsterName();
+  banner.classList.toggle('show', hasDup);
+  saveBtn.disabled = hasDup;
+}
+
+document.getElementById('saveBtn').addEventListener('click', () => {
+  const nameInput = document.getElementById('partyNameInput');
+  const memoInput = document.getElementById('partyMemoInput');
+  const name = nameInput.value.trim();
+  const memo = memoInput.value.trim();
+
+  if (!name) {
+    showSaveStatus('パーティ名を入力してください', true);
+    nameInput.focus();
+    return;
+  }
+  if (!state.slots.some(isSlotFilled)) {
+    showSaveStatus('主人公またはモンスターを1体以上選択してください', true);
+    return;
+  }
+  const dup = findDuplicateMonsterName();
+  if (dup) {
+    updateDupWarningUI();
+    showSaveStatus('※同じモンスターが重複して選択されています', true);
+    return;
+  }
+
+  const newParty = {
+    id: editingPartyId || ('p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8)),
+    name,
+    memo,
+    slots: state.slots.map(s => s ? { ...s } : null),
+    createdAt: editingPartyId ? (state.parties.find(p => p.id === editingPartyId)?.createdAt || Date.now()) : Date.now(),
+    updatedAt: Date.now()
+  };
+
+  if (editingPartyId) {
+    const idx = state.parties.findIndex(p => p.id === editingPartyId);
+    if (idx !== -1) {
+      state.parties[idx] = newParty;
+    } else {
+      state.parties.push(newParty);
+    }
+  } else {
+    state.parties.push(newParty);
+  }
+
+  const ok = persistParties();
+
+  if (ok) {
+    showSaveStatus(editingPartyId ? '更新しました' : '保存しました');
+    exitEditMode();
+    nameInput.value = '';
+    memoInput.value = '';
+    state.slots = [null, null, null];
+    renderSlots();
+    renderPartyList();
+  } else {
+    showSaveStatus('保存に失敗しました（容量制限の可能性）', true);
+  }
+});
+
+document.getElementById('searchSaved').addEventListener('input', renderPartyList);
+
+// エクスポート
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const payload = {
+    exportedAt: Date.now(),
+    version: 2,
+    parties: state.parties
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const pad = n => String(n).padStart(2, '0');
+  const d = new Date();
+  const fname = `dqmbv_parties_${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.json`;
+  a.href = url;
+  a.download = fname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+// インポート
+document.getElementById('importBtn').addEventListener('click', () => {
+  document.getElementById('importFileInput').click();
+});
+
+document.getElementById('importFileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const parsed = JSON.parse(ev.target.result);
+      let importedParties = [];
+      if (Array.isArray(parsed)) {
+        importedParties = parsed;
+      } else if (parsed && Array.isArray(parsed.parties)) {
+        importedParties = parsed.parties;
+      } else {
+        throw new Error('invalid format');
+      }
+
+      // 旧形式(members)にも対応しつつ正規化
+      const normalized = importedParties.map(p => {
+        let slots;
+        if (Array.isArray(p.slots)) {
+          slots = p.slots.map(s => {
+            if (!s) return null;
+            if (s.kind === 'hero') {
+              return { kind: 'hero', job: s.job || '', weapon: s.weapon || '', shield: s.shield || '', armor: s.armor || '' };
+            }
+            if (s.kind === 'monster' && s.name) {
+              return { kind: 'monster', name: s.name };
+            }
+            return null;
+          });
+        } else if (Array.isArray(p.members)) {
+          slots = p.members.map(m => m ? { kind: 'monster', name: m } : null);
+        } else {
+          slots = [null, null, null];
+        }
+        while (slots.length < 3) slots.push(null);
+        return {
+          id: p.id || ('p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8)),
+          name: p.name || '無題のパーティ',
+          memo: p.memo || '',
+          slots: slots.slice(0, 3),
+          createdAt: p.createdAt || Date.now()
+        };
+      });
+
+      // 既存IDと重複しないようにマージ（同一IDがあれば新しいIDを振り直す）
+      const existingIds = new Set(state.parties.map(p => p.id));
+      normalized.forEach(p => {
+        if (existingIds.has(p.id)) {
+          p.id = 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+        }
+        existingIds.add(p.id);
+      });
+
+      state.parties = state.parties.concat(normalized);
+      const ok = persistParties();
+      if (ok) {
+        showSaveStatus(`${normalized.length}件のパーティをインポートしました`);
+        renderPartyList();
+      } else {
+        showSaveStatus('インポートの保存に失敗しました', true);
+      }
+    } catch (err) {
+      showSaveStatus('JSONファイルの読み込みに失敗しました', true);
+    } finally {
+      e.target.value = '';
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+});
+
+document.getElementById('jobFilterCheckbox').addEventListener('change', () => {
+  // 開いている検索候補があれば、その場で絞り込み条件を反映し直す
+  document.querySelectorAll('.monster-combo-input').forEach(input => {
+    if (document.activeElement === input) {
+      onComboInput({ target: input });
+    }
+  });
+});
+
+// ============================================================
+// 謝辞・データ出典モーダル
+// ============================================================
+document.getElementById('creditLinkBtn').addEventListener('click', () => {
+  document.getElementById('creditOverlay').classList.add('open');
+});
+document.getElementById('creditCloseBtn').addEventListener('click', () => {
+  document.getElementById('creditOverlay').classList.remove('open');
+});
+document.getElementById('creditOverlay').addEventListener('click', (e) => {
+  if (e.target.id === 'creditOverlay') {
+    document.getElementById('creditOverlay').classList.remove('open');
+  }
+});
+
+function init() {
+  loadParties();
+  renderSlots();
+  renderPartyList();
+  updateEditModeUI();
+}
+
+init();
+
+</script>
+</body>
+</html>
