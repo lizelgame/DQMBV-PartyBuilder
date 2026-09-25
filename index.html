@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DQMBV パーティ保存ツール</title>
+<title>DQMBV パーティ保存ツール Ver1.19</title>
 <style>
 
 :root {
@@ -55,19 +55,19 @@ html, body {
 #app {
   max-width: 960px;
   margin: 0 auto;
-  padding: 20px 16px 80px;
+  padding: 14px 16px 80px;
 }
 
 header.top {
   text-align: center;
-  padding: 18px 0 22px;
+  padding: 10px 0 12px;
   border-bottom: 1px solid var(--border-color);
-  margin-bottom: 24px;
+  margin-bottom: 14px;
 }
 
 header.top h1 {
-  font-size: 1.5rem;
-  margin: 0 0 6px;
+  font-size: 1.3rem;
+  margin: 0 0 4px;
   letter-spacing: 0.02em;
   background: linear-gradient(90deg, #8fb4ff, #c79bff);
   -webkit-background-clip: text;
@@ -77,8 +77,150 @@ header.top h1 {
 
 header.top p {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   color: var(--text-faint);
+}
+
+.main-tab-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.main-tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 8px 6px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s;
+}
+
+.main-tab-btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.main-tab-btn:hover { color: var(--text-sub); }
+
+.main-tab-btn.active {
+  color: var(--text-main);
+}
+.main-tab-btn.active::after {
+  background: var(--accent);
+}
+
+.quick-build-desc {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  margin: -4px 0 10px;
+  line-height: 1.5;
+}
+
+.quick-controls-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.quick-job-field {
+  max-width: 240px;
+  flex: 1;
+  min-width: 160px;
+}
+
+.quick-compat-toggle {
+  margin-bottom: 9px;
+}
+
+.quick-random-row {
+  justify-content: flex-start;
+  margin-bottom: 18px;
+}
+
+.quick-slot-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.reroll-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color-light);
+  color: var(--text-main);
+  font-size: 0.9rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+.reroll-btn:hover {
+  border-color: var(--accent);
+  transform: rotate(45deg);
+}
+.reroll-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.reroll-btn:disabled:hover {
+  transform: none;
+  border-color: var(--border-color-light);
+}
+
+.quick-equip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.quick-equip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--bg-panel-alt);
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+
+.quick-equip-info {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.quick-equip-info .eq-label {
+  color: var(--text-sub);
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.reroll-btn-small {
+  width: 26px;
+  height: 26px;
+  font-size: 0.8rem;
 }
 
 .app-footer {
@@ -113,6 +255,12 @@ header.top p {
   text-align: center;
 }
 
+.quick-build-note {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  margin: -6px 0 12px;
+  opacity: 0.85;
+}
 .credit-text {
   font-size: 0.82rem;
   line-height: 1.8;
@@ -217,6 +365,14 @@ section h2 .h2-title::before {
   accent-color: var(--accent);
   cursor: pointer;
   flex-shrink: 0;
+}
+
+.dlc-global-toggle {
+  margin: -6px 0 18px;
+}
+
+.dlc-list-toggle {
+  margin: -4px 0 14px;
 }
 .slot {
   background: var(--bg-panel-alt);
@@ -662,6 +818,49 @@ button.primary-btn:disabled {
   margin-top: 2px;
 }
 
+.import-hint {
+  font-size: 0.74rem;
+  color: var(--text-faint);
+  line-height: 1.6;
+  margin: 0 0 14px;
+}
+.import-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.import-buttons button {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color-light);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.import-buttons .confirm-delete { border: none; }
+
+.party-compat-box {
+  margin-top: 10px;
+  padding: 8px 10px 4px;
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+}
+.party-compat-title {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+}
+.party-compat-list { padding-bottom: 4px; }
+.party-compat-empty {
+  font-size: 0.76rem;
+  color: var(--text-faint);
+  padding: 2px 0 8px;
+}
+.party-compat-third { margin-top: 4px; }
+
 .hero-equip-list {
   display: flex;
   flex-direction: column;
@@ -767,10 +966,23 @@ button.primary-btn:disabled {
 ::-webkit-scrollbar-thumb:hover { background: #4a4f5a; }
 
 @media (max-width: 600px) {
-  #app { padding: 14px 10px 60px; }
-  section { padding: 14px; }
-  header.top h1 { font-size: 1.25rem; }
+  #app { padding: 10px 10px 60px; }
+  section { padding: 12px; margin-bottom: 12px; }
+  section h2 { margin-bottom: 10px; font-size: 0.96rem; }
+  header.top { padding: 6px 0 8px; margin-bottom: 10px; }
+  header.top h1 { font-size: 1.1rem; margin-bottom: 2px; }
+  header.top p { font-size: 0.68rem; }
+  .main-tab-bar { margin-bottom: 8px; }
+  .main-tab-btn { padding: 7px 5px; font-size: 0.82rem; }
+  .dlc-global-toggle { margin: -2px 0 10px; }
+  .job-filter-toggle { margin-bottom: 10px; }
+  .quick-build-desc { margin: -2px 0 8px; }
+  .quick-controls-row { margin-bottom: 10px; }
+  .quick-random-row { margin-bottom: 12px; }
+  .slot-grid { gap: 10px; }
+  .slot { padding: 10px; gap: 8px; }
 }
+
 
 .confirm-overlay {
   position: fixed;
@@ -835,55 +1047,106 @@ button.primary-btn:disabled {
     <p>ドラゴンクエストモンスターズ バトルロードビクトリー 相性チェック &amp; パーティ管理</p>
   </header>
 
-  <section>
-    <h2>
-      <span class="h2-title">パーティ編成</span>
-    </h2>
-    <label class="job-filter-toggle">
-      <input type="checkbox" id="jobFilterCheckbox" checked>
-      <span>職業と相性があるモンスターのみ表示</span>
-    </label>
-    <div class="slot-grid" id="slotGrid"></div>
-  </section>
+  <div class="main-tab-bar">
+    <button type="button" class="main-tab-btn active" id="tabBtnSave" data-tab="save">パーティ保存・一覧</button>
+    <button type="button" class="main-tab-btn" id="tabBtnQuick" data-tab="quick">即席構築</button>
+  </div>
 
-  <section>
-    <h2>
-      <span class="h2-title">パーティ情報</span>
-    </h2>
-    <div class="edit-mode-banner" id="editModeBanner">
-      <span>編集中のパーティを更新します</span>
-      <button type="button" class="ghost-btn" id="cancelEditBtn">編集をやめる</button>
-    </div>
-    <div class="dup-warning-banner" id="dupWarningBanner">※同じモンスターが重複して選択されています</div>
-    <div class="field-group">
-      <label for="partyNameInput">パーティ名</label>
-      <input type="text" id="partyNameInput" placeholder="例：草原/森魔法使い" maxlength="60">
-    </div>
-    <div class="field-group">
-      <label for="partyMemoInput">メモ</label>
-      <textarea id="partyMemoInput" placeholder="編成のねらいや戦術メモなど自由にどうぞ" maxlength="1000"></textarea>
-    </div>
-    <div class="save-btn-row">
-      <span class="save-status" id="saveStatus"></span>
-      <button class="primary-btn" id="saveBtn">保存する</button>
-    </div>
-  </section>
+  <label class="job-filter-toggle dlc-global-toggle">
+    <input type="checkbox" id="includeDlcCheckbox" checked>
+    <span>DLCモンスターを含める</span>
+  </label>
 
-  <section>
-    <h2>
-      <span class="h2-title">保存済みパーティ一覧</span>
-      <span class="header-actions">
-        <button class="ghost-btn" id="exportBtn">JSONエクスポート</button>
-        <button class="ghost-btn" id="importBtn">JSONインポート</button>
-        <input type="file" id="importFileInput" accept="application/json,.json">
-      </span>
-    </h2>
-    <div class="toolbar-row">
-      <input type="text" class="search-saved" id="searchSaved" placeholder="パーティ名・モンスター名で検索">
-      <span class="count-badge" id="countBadge">0件保存中</span>
-    </div>
-    <div id="partyListWrap"></div>
-  </section>
+  <div class="main-tab-panel" id="tabPanelSave">
+    <section>
+      <h2>
+        <span class="h2-title">パーティ編成</span>
+      </h2>
+      <label class="job-filter-toggle">
+        <input type="checkbox" id="jobFilterCheckbox" checked>
+        <span>職業と相性があるモンスターのみ表示</span>
+      </label>
+      <label class="job-filter-toggle">
+        <input type="checkbox" id="armorAptitudeCheckbox" checked>
+        <span>職業にあった鎧にする</span>
+      </label>
+      <div class="slot-grid" id="slotGrid"></div>
+    </section>
+
+    <section>
+      <h2>
+        <span class="h2-title">パーティ情報</span>
+      </h2>
+      <div class="edit-mode-banner" id="editModeBanner">
+        <span>編集中のパーティを更新します</span>
+        <button type="button" class="ghost-btn" id="cancelEditBtn">編集をやめる</button>
+      </div>
+      <div class="dup-warning-banner" id="dupWarningBanner">※同じモンスターが重複して選択されています</div>
+      <div class="field-group">
+        <label for="partyNameInput">パーティ名</label>
+        <input type="text" id="partyNameInput" placeholder="例：草原/森魔法使い" maxlength="60">
+      </div>
+      <div class="field-group">
+        <label for="partyMemoInput">メモ</label>
+        <textarea id="partyMemoInput" placeholder="ダブルスキャン構成のメモや、戦術・自由な記録にご活用ください" maxlength="1000"></textarea>
+      </div>
+      <div class="save-btn-row">
+        <span class="save-status" id="saveStatus"></span>
+        <button class="primary-btn" id="saveBtn">保存する</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>
+        <span class="h2-title">保存済みパーティ一覧</span>
+        <span class="header-actions">
+          <button class="ghost-btn" id="exportBtn">JSONエクスポート</button>
+          <button class="ghost-btn" id="importBtn">JSONインポート</button>
+          <input type="file" id="importFileInput" accept="application/json,.json">
+        </span>
+      </h2>
+      <div class="toolbar-row">
+        <input type="text" class="search-saved" id="searchSaved" placeholder="パーティ名・モンスター名で検索">
+        <span class="count-badge" id="countBadge">0件保存中</span>
+      </div>
+      <label class="job-filter-toggle dlc-list-toggle">
+        <input type="checkbox" id="hideDlcPartiesCheckbox">
+        <span>DLCモンスターを含むパーティを非表示にする</span>
+      </label>
+      <div id="partyListWrap"></div>
+    </section>
+  </div>
+
+  <div class="main-tab-panel" id="tabPanelQuick" style="display:none;">
+    <section>
+      <h2>
+        <span class="h2-title">即席構築</span>
+      </h2>
+      <p class="quick-build-desc">このタブでの編成は保存されません。フリー対戦で手軽に構築したいときなどにご利用ください</p>
+      <p class="quick-build-note">※「職業ランダム」にはモンスターマスターは含まれません</p>
+
+      <div class="quick-controls-row">
+        <div class="hero-field quick-job-field">
+          <label>職業</label>
+          <select id="quickJobSelect"></select>
+        </div>
+        <label class="job-filter-toggle quick-compat-toggle">
+          <input type="checkbox" id="quickCompatCheckbox" checked>
+          <span>職業相性</span>
+        </label>
+        <label class="job-filter-toggle quick-compat-toggle">
+          <input type="checkbox" id="quickArmorAptitudeCheckbox" checked>
+          <span>職業にあった鎧にする</span>
+        </label>
+      </div>
+
+      <div class="save-btn-row quick-random-row">
+        <button class="primary-btn" id="quickRandomBtn">ランダム選出</button>
+      </div>
+
+      <div class="slot-grid" id="quickSlotGrid"></div>
+    </section>
+  </div>
 
   <footer class="app-footer">
     <button type="button" class="credit-link" id="creditLinkBtn">謝辞・データ出典</button>
@@ -900,10 +1163,22 @@ button.primary-btn:disabled {
   </div>
 </div>
 
+<div class="confirm-overlay" id="importOverlay">
+  <div class="confirm-box">
+    <p id="importConfirmText">インポートしますか？</p>
+    <p class="import-hint">「追加」は今のデータを残して統合します（同じIDは新しい方を採用）。「置き換え」は今のデータをすべて入れ替えます。</p>
+    <div class="import-buttons">
+      <button class="primary-btn" id="importMergeBtn">追加して統合</button>
+      <button class="confirm-delete" id="importReplaceBtn">すべて置き換え</button>
+      <button class="confirm-cancel" id="importCancelBtn">キャンセル</button>
+    </div>
+  </div>
+</div>
+
 <div class="confirm-overlay" id="creditOverlay">
   <div class="confirm-box credit-box">
     <h3 class="credit-title">データ出典・謝辞</h3>
-    <p class="credit-text">本ツールのデータ作成にあたり、有志の皆様が公開・蓄積されてきた情報や検証データを参考にさせていただきました。<br><br>長年にわたり作品を盛り上げ、貴重な情報を遺してくださったすべてのプレイヤー・ファンコミュニティの皆様に心より感謝申し上げます。</p>
+    <p class="credit-text">本ツールのデータ作成にあたり、有志の皆様が公開・蓄積されてきた情報や検証データを参考にさせていただきました。<br>また、即席構築機能のアイデアや実装にあたっては、その実装をご快諾いただいたこと、および参考にさせていただいたことに深く感謝申し上げます。<br><br>長年にわたり作品を盛り上げ、貴重な情報を遺してくださったすべてのプレイヤー・ファンコミュニティの皆様に心より感謝申し上げます。</p>
     <p class="credit-disclaimer">※本ツールは個人による非公式のファンツールであり、公式・関係各所とは一切関係ありません。</p>
     <div class="confirm-buttons">
       <button class="confirm-cancel" id="creditCloseBtn">閉じる</button>
@@ -913,11 +1188,96 @@ button.primary-btn:disabled {
 
 <script>
 const MONSTER_DATA = {"スライム":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["勇者"]},"スライムベス":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["森/ダンジョン"],"others":["ミニ（HPアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["賢者"]},"メタルスライム":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"ドラキー":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["賢者"]},"タホドラキー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["森/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"ゴーレム":{"isDLC":false,"job":["武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["戦士"]},"ストーンマン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["バトルマスター"]},"ゴールドマン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["草原/荒野"],"others":[],"thirdSkillJob":["勇者"]},"スライムナイト":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/森"],"others":["モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["魔法使い"]},"ミミック":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"ホイミスライム":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）","飛行（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"バル":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/荒野"],"others":["モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["バトルマスター"]},"ベル":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）","メカ（すばやさアップ）"],"habitat":["草原/荒野"],"others":[],"thirdSkillJob":["武闘家"]},"ボル＆ブル":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/荒野"],"others":[],"thirdSkillJob":["戦士"]},"さまようよろい":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["魔法使い"]},"ぼうれい剣士":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":[],"thirdSkillJob":["勇者"]},"ギガンテス":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["山/ダンジョン","ロンダルキア"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["魔法使い"]},"うごくせきぞう":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["戦士"]},"キラーマシン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["メカ（すばやさアップ）"],"habitat":["草原/山"],"others":[],"thirdSkillJob":["武闘家"]},"おどる宝石":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","状態異常（すばやさアップ）","モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["魔法使い"]},"ベビーサタン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["勇者"]},"じんめんじゅ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/森"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"しにがみきぞく":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":[],"thirdSkillJob":["賢者"]},"スカルライダー":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":[],"thirdSkillJob":["戦士"]},"プチアーノン":{"isDLC":false,"job":["僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["海"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["バトルマスター"]},"マドハンド":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["どくの沼地"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["バトルマスター"]},"いばらドラゴン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）","ドラゴン（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":[],"thirdSkillJob":["僧侶"]},"おばけきのこ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/森"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"バーサーカー":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["勇者"]},"キラーパンサー":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":[],"thirdSkillJob":["勇者"]},"サイレス":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":[],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"くさった死体":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）","人型（ちからアップ）"],"habitat":["どくの沼地"],"others":[],"thirdSkillJob":["バトルマスター"]},"おおきづち":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/ダンジョン"],"others":["ミニ（HPアップ）","補助効果（すばやさアップ）","一発屋（ちからアップ）","モリーレンタルI（ゆうきアップ）"],"thirdSkillJob":["勇者"]},"オーク":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["勇者"]},"海竜":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["海"],"others":["ビッグ（ちからアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"キメラ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/山"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["僧侶"]},"バトルレックス":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["草原/山"],"others":[],"thirdSkillJob":["戦士"]},"ヘルパイレーツ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["海"],"others":[],"thirdSkillJob":["僧侶"]},"リリパット":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"ドラキーマ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"ひとくいばこ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["魔法使い"]},"はぐれメタル":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/ダンジョン"],"others":[],"thirdSkillJob":["戦士"]},"プリズニャン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["バトルマスター"]},"ドラゴン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["勇者"]},"きめんどうし":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"メタルライダー":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/荒野"],"others":[],"thirdSkillJob":["武闘家"]},"ボストロール":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["ビッグ（ちからアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["僧侶"]},"メタッピー":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["メカ（すばやさアップ）","飛行（かしこさアップ）"],"habitat":["草原/山"],"others":[],"thirdSkillJob":["僧侶"]},"あくましんかん":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["僧侶"]},"パンドラボックス":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":["状態異常（すばやさアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["賢者"]},"キラーマシン2":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["メカ（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"デンデン竜":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["草原/荒野"],"others":[],"thirdSkillJob":["戦士"]},"死霊の騎士":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["どくの沼地"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["魔法使い"]},"アークデーモン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/ダンジョン","ロンダルキア"],"others":["ビッグ（ちからアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"キラーマシン3":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["メカ（すばやさアップ）"],"habitat":["荒野/ダンジョン"],"others":[],"thirdSkillJob":["武闘家"]},"どろにんぎょう":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"あやしいかげ":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["武闘家"]},"メタルキング":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["森/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["戦士"]},"かくとうパンサー":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["武闘家"]},"マミー":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":[],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["戦士"]},"ダークランサー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["荒野/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"シルバーデビル":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）","悪魔（かしこさアップ）"],"habitat":["草原/山","ロンダルキア"],"others":[],"thirdSkillJob":["バトルマスター"]},"だいまどう":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":["呪文（かしこさアップ）","モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["魔法使い"]},"スターキメラ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"キースドラゴン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["武闘家"]},"ダースドラゴン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["森/ダンジョン"],"others":[],"thirdSkillJob":["戦士"]},"シールドこぞう":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","補助効果（すばやさアップ）","モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["僧侶"]},"エビルスピリッツ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"イエティ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/山"],"others":[],"thirdSkillJob":["魔法使い"]},"よるのていおう":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/森"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"炎の戦士":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":["モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["武闘家"]},"アンクルホーン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"さそりアーマー":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["どくの沼地"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"プテラノドン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"マネマネ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"ラリホービートル":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"ポイズンリザード":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":[],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"デュラハーン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"あばれうしどり":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["戦士"]},"オーシャンクロー":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["海"],"others":[],"thirdSkillJob":["武闘家"]},"ひとつめピエロ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","状態異常（すばやさアップ）","モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["魔法使い"]},"ばくだんいわ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/荒野"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"ダンビラムーチョ":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/荒野"],"others":["呪文（かしこさアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["勇者"]},"メーダ":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）","飛行（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["武闘家"]},"ゴースト":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"いわとびあくま":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）","悪魔（かしこさアップ）"],"habitat":["海"],"others":["モリーレンタルII（ゆうきアップ）"],"thirdSkillJob":["僧侶"]},"コドラ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["草原/山"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["魔法使い"]},"かぶとこぞう":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/森"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["勇者"]},"ライノソルジャー":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["森/荒野"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["戦士"]},"スライムつむり":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）","物質（みのまもりアップ）"],"habitat":["海"],"others":["ミニ（HPアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"メイジキメラ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/山"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["バトルマスター"]},"べレス":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["魔法使い"]},"いたずらモグラ":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":["ミニ（HPアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["戦士"]},"アームライオン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["武闘家"]},"ももんじゃ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["戦士"]},"しにがみのきし":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"てっきゅうまじん":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["魔法使い"]},"おおめだま":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["どくの沼地"],"others":["呪文（かしこさアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"ガーゴイル":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）","飛行（かしこさアップ）"],"habitat":["草原/山"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"カロン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"コングヘッド":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["武闘家"]},"ひとくいサーベル":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"ブリザードマン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["戦士"]},"シールドヒッポ":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"きとうし":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["森/荒野"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"サイコロン":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/山"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["武闘家"]},"ドラゴンライダー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）","飛行（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["僧侶"]},"ピクシー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["武闘家"]},"シャドーサタン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"ホースデビル":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["どくの沼地"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["武闘家"]},"マンドレイク":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["戦士"]},"しにがみ":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["僧侶"]},"メタルドラゴン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）","メカ（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"ソルジャーブル":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/山"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["戦士"]},"クックルー":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"ドラゴンキッズ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["森/荒野"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["勇者"]},"びっくりサタン":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["森/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["バトルマスター"]},"おばけキャンドル":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["僧侶"]},"ずしおうまる":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":["ビッグ（ちからアップ）","状態異常（すばやさアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["勇者"]},"ビックアイ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/山"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["僧侶"]},"ドラゴンゾンビ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）","不死（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["バトルマスター"]},"エリミネーター":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["荒野/ダンジョン"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["勇者"]},"レッサーデーモン":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["森/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"スモールグール":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/ダンジョン"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"グレムリン":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）","飛行（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"アンデッドマン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["どくの沼地"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"リザードマン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/ダンジョン"],"others":[],"thirdSkillJob":["魔法使い"]},"しのどれい":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["どくの沼地"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"イーブルフライ":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["昆虫（ちからアップ）","飛行（かしこさアップ）"],"habitat":["どくの沼地"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"シャーマン":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["バトルマスター"]},"ダッシュラン":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["草原/森"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["戦士"]},"ギズモ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"きりかぶこぞう":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":["ミニ（HPアップ）"],"thirdSkillJob":["僧侶"]},"ファーラット":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"れんごくちょう":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"グレートオーラス":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["海"],"others":["ビッグ（ちからアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["僧侶"]},"ねこまどう":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"キャタピラー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["昆虫（ちからアップ）"],"habitat":["草原/森"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["魔法使い"]},"シールドオーガ":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/ダンジョン"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["僧侶"]},"ぐんたいガニ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["海"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["賢者"]},"アルミラージ":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","呪文（かしこさアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["勇者"]},"なげきのぼうれい":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"ごろつき":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["賢者"]},"プロトキラー":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["メカ（すばやさアップ）"],"habitat":["草原/森"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["勇者"]},"きりさきピエロ":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["勇者"]},"キャットフライ":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）","飛行（かしこさアップ）"],"habitat":["草原/荒野"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"ナイトリッチ":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["バトルマスター"]},"ドロヌーバ":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["どくの沼地"],"others":[],"thirdSkillJob":["武闘家"]},"デビルアーマー":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"モーモン":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"アルゴリザード":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["森/荒野"],"others":["ビッグ（ちからアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"パペットこぞう":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["荒野/ダンジョン"],"others":[],"thirdSkillJob":["勇者"]},"メタルハンター":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["メカ（すばやさアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["戦士"]},"デスストーカー":{"isDLC":false,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"デスゴーゴン":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["賢者"]},"サーベルきつね":{"isDLC":false,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["荒野/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["戦士"]},"デンタザウルス":{"isDLC":false,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/荒野"],"others":["ビッグ（ちからアップ）","補助効果（すばやさアップ）"],"thirdSkillJob":["バトルマスター"]},"へルビースト":{"isDLC":false,"job":["魔法使い（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"さそりばち":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["昆虫（ちからアップ）","飛行（かしこさアップ）"],"habitat":["草原/森"],"others":[],"thirdSkillJob":["バトルマスター"]},"ゴールデンゴーレム":{"isDLC":false,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["ビッグ（ちからアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["僧侶"]},"ポンポコだぬき":{"isDLC":false,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["勇者"]},"かまっち":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/荒野"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["武闘家"]},"スライムタワー":{"isDLC":false,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/森"],"others":["補助効果（すばやさアップ）"],"thirdSkillJob":["勇者"]},"悪魔の騎士":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["山/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["武闘家"]},"キラーリカント":{"isDLC":true,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"影の騎士":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["荒野/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"アトラス":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["草原/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["戦士"]},"バズズ":{"isDLC":true,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）","悪魔（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":[],"thirdSkillJob":["武闘家"]},"ベリアル":{"isDLC":true,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["荒野/ダンジョン"],"others":["ビッグ（ちからアップ）","呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"ミイラおとこ":{"isDLC":true,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["草原/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"トロルキング":{"isDLC":true,"job":["戦士（ちからアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["森/荒野"],"others":["ビッグ（ちからアップ）","一発屋（ちからアップ）"],"thirdSkillJob":["戦士"]},"だいまじん":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["草原/荒野"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"キングレオ":{"isDLC":true,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["武闘家"]},"ヘルバトラー":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["森/荒野"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["賢者"]},"エビルプリースト":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["山/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["戦士"]},"ジャミ":{"isDLC":true,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["悪魔（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["魔法使い"]},"ゴンズ":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["獣（すばやさアップ）"],"habitat":["山/ダンジョン"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"ゲレゲレ":{"isDLC":true,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/森"],"others":[],"thirdSkillJob":["武闘家"]},"悪魔のかがみ":{"isDLC":true,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["物質（みのまもりアップ）"],"habitat":["森/荒野"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"まおうの使い":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["草原/荒野"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"ドランゴ":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["ドラゴン（みのまもりアップ）"],"habitat":["草原/森"],"others":[],"thirdSkillJob":["戦士"]},"ゴールデンスライム":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/荒野"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["賢者"]},"オーガキング":{"isDLC":true,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/山"],"others":["一発屋（ちからアップ）"],"thirdSkillJob":["バトルマスター"]},"まかいじゅう":{"isDLC":true,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["荒野/ダンジョン"],"others":["ビッグ（ちからアップ）"],"thirdSkillJob":["魔法使い"]},"じごくのよろい":{"isDLC":true,"job":["戦士（ちからアップ）","魔法使い（かしこさアップ）","賢者（かしこさアップ）"],"type":["不死（みのまもりアップ）"],"habitat":["森/荒野"],"others":[],"thirdSkillJob":["戦士"]},"ゲモン":{"isDLC":true,"job":["魔法使い（かしこさアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["飛行（かしこさアップ）"],"habitat":["山/ダンジョン"],"others":["状態異常（すばやさアップ）"],"thirdSkillJob":["魔法使い"]},"やみのしさい":{"isDLC":true,"job":["魔法使い（かしこさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["人型（ちからアップ）"],"habitat":["草原/森"],"others":["呪文（かしこさアップ）"],"thirdSkillJob":["僧侶"]},"ゴールドタヌ":{"isDLC":true,"job":["武闘家（すばやさアップ）","僧侶（かしこさアップ）","賢者（かしこさアップ）"],"type":["獣（すばやさアップ）"],"habitat":["草原/ダンジョン"],"others":["ミニ（HPアップ）","状態異常（すばやさアップ）"],"thirdSkillJob":["僧侶"]},"アイスビックル":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","バトルマスター（ちからアップ）"],"type":["人型（ちからアップ）"],"habitat":["海"],"others":[],"thirdSkillJob":["武闘家"]},"ゴールデントーテム":{"isDLC":true,"job":["戦士（ちからアップ）","武闘家（すばやさアップ）","賢者（かしこさアップ）"],"type":["スライム（すばやさアップ）"],"habitat":["草原/ダンジョン"],"others":[],"thirdSkillJob":["賢者"]}};
-const ITEM_DATA = {"weapons":["あくまのツメ","アサシンダガー","いかずちの杖","うみなりの杖","おうごんのツメ","王者の剣","オリハルコンのツメ","きせきのつるぎ","ぎんがのつるぎ","キングアックス","グレートアックス","賢者の杖","賢者の杖（青）","賢者の杖（赤）","賢者の杖（オレンジ）","賢者の杖（黒）","賢者の杖（白）","賢者の杖（灰色）","賢者の杖（水色）","賢者の杖（緑）","さばきの杖","さんぞくのオノ","斬魔刀","疾風のレイピア","しゅくふくの杖","死霊のツメ","神竜のつるぎ","ソードブレイカー","てつのツメ","てつのつるぎ","天空のつるぎ","天帝のつるぎ","てんばつの杖","どくがのナイフ","どくばり","ドラゴンキラー","ドラゴンの杖","ねむりの杖","はおうのオノ","はかいのつるぎ","はがねのつるぎ","はじゃのつるぎ","はやぶさの剣・改","はやぶさのツメ","ひかりの杖","風林火山","ふぶきのオノ","プラチナソード","ほしくだき","マグマの杖","マジカルメイス","まじゅうのツメ","まじんのオノ","まどうしの杖","まどろみの剣","まふうじの杖","メガトンハンマー","メタルウィング","メタルキングの剣","メタルキングのヤリ","ゆうわくの剣","竜王のツメ","竜神王の剣","竜神王の剣・弐の太刀","りりょくの杖","ルーンスタッフ"],"shields":["おなべのフタ","せいどうのたて","まほうのたて","みかがみのたて","しにがみのたて","メタルキングのたて","聖女のたて","ドラゴンシールド","勇者のたて","天空のたて","竜神のたて","スライムトレイ","ウロボロスのたて"],"armors":["たびびとのふく","はがねのよろい","まじんのよろい","まほうのよろい","しんぴのよろい","竜神のよろい","メタルキングよろい","天空のよろい","光のよろい","竜戦士のよろい","しんわのよろい","まどうしのローブ","まほうの法衣","やすらぎのローブ","光のドレス","天使のローブ","ダークローブ","賢者のローブ","ドラゴンローブ","セラフィムのローブ","ぶとうぎ","みかわしのふく","毛皮のポンチョ","しのびのふく","不思議なボレロ","闇の衣","そうてんのトーガ"]};
+const ITEM_DATA = {"weapons":[{"name":"あくまのツメ","job":20},{"name":"アサシンダガー","job":8},{"name":"いかずちの杖","job":34},{"name":"うみなりの杖","job":40},{"name":"おうごんのツメ","job":20},{"name":"王者の剣","job":81},{"name":"オリハルコンのツメ","job":20},{"name":"きせきのつるぎ","job":81},{"name":"ぎんがのつるぎ","job":81},{"name":"キングアックス","job":16},{"name":"グレートアックス","job":17},{"name":"賢者の杖","job":42},{"name":"賢者の杖（青）","job":32},{"name":"賢者の杖（赤）","job":32},{"name":"賢者の杖（オレンジ）","job":32},{"name":"賢者の杖（黒）","job":32},{"name":"賢者の杖（白）","job":32},{"name":"賢者の杖（灰色）","job":32},{"name":"賢者の杖（水色）","job":32},{"name":"賢者の杖（緑）","job":32},{"name":"さばきの杖","job":40},{"name":"さんぞくのオノ","job":17},{"name":"斬魔刀","job":16},{"name":"疾風のレイピア","job":16},{"name":"しゅくふくの杖","job":40},{"name":"死霊のツメ","job":20},{"name":"神竜のつるぎ","job":64},{"name":"ソードブレイカー","job":2},{"name":"てつのツメ","job":20},{"name":"てつのつるぎ","job":81},{"name":"天空のつるぎ","job":81},{"name":"天帝のつるぎ","job":64},{"name":"てんばつの杖","job":40},{"name":"どくがのナイフ","job":8},{"name":"どくばり","job":2},{"name":"ドラゴンキラー","job":20},{"name":"ドラゴンの杖","job":34},{"name":"ねむりの杖","job":40},{"name":"はおうのオノ","job":17},{"name":"はかいのつるぎ","job":81},{"name":"はがねのつるぎ","job":81},{"name":"はじゃのつるぎ","job":81},{"name":"はやぶさの剣・改","job":16},{"name":"はやぶさのツメ","job":16},{"name":"ひかりの杖","job":40},{"name":"風林火山","job":16},{"name":"ふぶきのオノ","job":17},{"name":"プラチナソード","job":81},{"name":"ほしくだき","job":16},{"name":"マグマの杖","job":34},{"name":"マジカルメイス","job":34},{"name":"まじゅうのツメ","job":20},{"name":"まじんのオノ","job":17},{"name":"まどうしの杖","job":34},{"name":"まどろみの剣","job":81},{"name":"まふうじの杖","job":40},{"name":"メガトンハンマー","job":16},{"name":"メタルウィング","job":16},{"name":"メタルキングの剣","job":81},{"name":"メタルキングのヤリ","job":16},{"name":"ゆうわくの剣","job":81},{"name":"竜王のツメ","job":20},{"name":"竜神王の剣","job":81},{"name":"竜神王の剣・弐の太刀","job":64},{"name":"りりょくの杖","job":34},{"name":"ルーンスタッフ","job":34}],"shields":["おなべのフタ","せいどうのたて","まほうのたて","みかがみのたて","しにがみのたて","メタルキングのたて","聖女のたて","ドラゴンシールド","勇者のたて","天空のたて","竜神のたて","スライムトレイ","ウロボロスのたて"],"armors":["たびびとのふく","はがねのよろい","まじんのよろい","まほうのよろい","しんぴのよろい","竜神のよろい","メタルキングよろい","天空のよろい","光のよろい","竜戦士のよろい","しんわのよろい","まどうしのローブ","まほうの法衣","やすらぎのローブ","光のドレス","天使のローブ","ダークローブ","賢者のローブ","ドラゴンローブ","セラフィムのローブ","ぶとうぎ","みかわしのふく","毛皮のポンチョ","しのびのふく","不思議なボレロ","闇の衣","そうてんのトーガ"]};
 const MONSTER_NAMES = Object.keys(MONSTER_DATA).sort((a, b) => a.localeCompare(b, 'ja'));
 const HERO_JOBS = ['戦士', '武闘家', '魔法使い', '僧侶', 'バトルマスター', '賢者', '勇者'];
+
+// 武器のjobはビットフラグで管理されている（bukidata.js準拠）
+// 1:戦士 2:短剣(魔法使い/賢者/勇者系) 8:短剣(僧侶/賢者/勇者系) 16:バトルマスター専用融合武器 17:オノ(戦士/バトマス) 20:武闘家(ツメ)
+// 32:賢者(色杖) 34:魔法使い(杖) 40:僧侶(杖) 42:賢者(杖) 64:勇者専用融合武器 81:剣全般(戦士/バトマス/勇者)
+// job値だけでは「杖」と「短剣」を区別できない武器があるため、短剣(job2/8)も含めて職業ごとに「許可するjob値」を明示的な配列で定義する。
+const JOB_ALLOWED_WEAPON_JOBS = {
+  '戦士': [17, 81],
+  '武闘家': [20],
+  '魔法使い': [2, 34],
+  '僧侶': [8, 40],
+  'バトルマスター': [16, 17, 20, 81],
+  '賢者': [2, 8, 32, 34, 40, 42],
+  '勇者': [2, 8, 64, 81]
+};
+
+// 職業に応じて装備可能な武器名の配列を返す。
+// 職業が未選択、またはマッピングにない場合は全武器を返す。
+function getEquippableWeaponNames(job) {
+  const allowed = JOB_ALLOWED_WEAPON_JOBS[job];
+  if (!allowed) {
+    return ITEM_DATA.weapons.map(w => w.name);
+  }
+  return ITEM_DATA.weapons
+    .filter(w => allowed.includes(w.job))
+    .map(w => w.name);
+}
+
+// 防具は武器のようなビットフラグを持たないため、職業ごとに「適性のある防具名」を明示的なリストで定義する。
+// 魔法使い・僧侶・賢者は同一リストを共有する。
+const MAGE_TYPE_ARMOR_LIST = ['まどうしのローブ', 'まほうの法衣', 'やすらぎのローブ', '光のドレス', 'みかわしのふく', '天使のローブ', 'ダークローブ', '賢者のローブ', 'ドラゴンローブ', 'セラフィムのローブ', '不思議なボレロ', 'まほうのよろい'];
+const JOB_APTITUDE_ARMOR_LIST = {
+  '戦士': ['はがねのよろい', 'まじんのよろい', 'まほうのよろい', 'しんぴのよろい', 'メタルキングよろい', '天空のよろい', '光のよろい', '竜神のよろい', '竜戦士のよろい', '不思議なボレロ', 'しんわのよろい'],
+  '魔法使い': MAGE_TYPE_ARMOR_LIST,
+  '僧侶': MAGE_TYPE_ARMOR_LIST,
+  '賢者': MAGE_TYPE_ARMOR_LIST,
+  '武闘家': ['ぶとうぎ', 'みかわしのふく', '毛皮のポンチョ', 'しのびのふく', '不思議なボレロ', 'そうてんのトーガ', '闇の衣', 'まほうのよろい'],
+  'バトルマスター': ['はがねのよろい', 'まじんのよろい', 'まほうのよろい', 'しんぴのよろい', 'メタルキングよろい', '天空のよろい', '光のよろい', '竜神のよろい', '竜戦士のよろい', 'ぶとうぎ', 'みかわしのふく', '毛皮のポンチョ', 'しのびのふく', '不思議なボレロ', 'そうてんのトーガ', '闇の衣', 'しんわのよろい'],
+  '勇者': ['はがねのよろい', 'まじんのよろい', 'まほうのよろい', 'しんぴのよろい', 'メタルキングよろい', '天空のよろい', '光のよろい', '竜神のよろい', '竜戦士のよろい', 'ぶとうぎ', 'みかわしのふく', '毛皮のポンチョ', 'しのびのふく', '不思議なボレロ', 'そうてんのトーガ', '闇の衣', 'しんわのよろい']
+};
+
+// 「たびびとのふく」「おなべのフタ」等の初期装備はデータとしては保持しつつ、通常の選択・抽選候補からは除外する
+const STARTER_EQUIP_EXCLUDE = ['たびびとのふく', 'おなべのフタ'];
+
+// 防具適性チェックの状態に応じて、選択・抽選対象となる防具名の配列を返す
+function getEligibleArmorNames(job, applyAptitude) {
+  let pool = ITEM_DATA.armors.filter(a => !STARTER_EQUIP_EXCLUDE.includes(a));
+  if (applyAptitude && job && JOB_APTITUDE_ARMOR_LIST[job]) {
+    const aptList = JOB_APTITUDE_ARMOR_LIST[job];
+    pool = pool.filter(a => aptList.includes(a));
+  }
+  return pool;
+}
 const STORAGE_KEY = 'dqmbv_saved_parties_v2';
 const OLD_STORAGE_KEY = 'dqmbv_saved_parties_v1';
+const DLC_SETTING_KEY = 'dqmbv_include_dlc_v1';
+
+// DLCモンスターを含めるかどうかのグローバル設定（画面をまたいで共通）。ローカルストレージに保存し次回起動時も保持する。
+const dlcSettingState = {
+  includeDlc: true
+};
+
+function loadDlcSetting() {
+  try {
+    const raw = localStorage.getItem(DLC_SETTING_KEY);
+    if (raw === null) {
+      dlcSettingState.includeDlc = true;
+    } else {
+      dlcSettingState.includeDlc = raw === 'true';
+    }
+  } catch (e) {
+    dlcSettingState.includeDlc = true;
+  }
+}
+
+function persistDlcSetting() {
+  try {
+    localStorage.setItem(DLC_SETTING_KEY, String(dlcSettingState.includeDlc));
+  } catch (e) {
+    // 保存に失敗しても致命的ではないため何もしない
+  }
+}
+
+// 現在のDLC設定を反映したモンスター名一覧を返す（パーティ編成・即席構築の両方で共通利用）
+function getAvailableMonsterNames() {
+  if (dlcSettingState.includeDlc) return MONSTER_NAMES;
+  return MONSTER_NAMES.filter(n => !MONSTER_DATA[n].isDLC);
+}
 
 // state.slots[i] = { kind: 'monster', name: '...' } または { kind: 'hero', job: '', weapon: '', shield: '', armor: '' } または null
 const state = {
@@ -926,6 +1286,34 @@ const state = {
 };
 
 let editingPartyId = null;
+
+// 即席構築タブ専用の状態（保存領域とは完全に独立）
+const QUICK_JOB_OPTIONS = ['モンスターマスター', ...HERO_JOBS];
+
+// 【完全ランダム】職業の選択自体をランダムにするモード用の設定。
+// 詳細仕様（モンスターマスターを含めるか等）は後で詰める前提のため、ここに集約している。
+const QUICK_JOB_RANDOM_VALUE = '__random__';
+const fullRandomConfig = {
+  includeMonsterMaster: false, // 抽選対象にモンスターマスターを含めるか（暫定：含めない）
+  excludedJobs: []             // 抽選から除外したい職業（HERO_JOBSの名前を入れる）
+};
+
+// 完全ランダム時に抽選対象となる職業（=モンスターマスターを除く主人公職＋設定次第でモンスターマスター）
+function getFullRandomJobPool() {
+  const heroPool = HERO_JOBS.filter(j => !fullRandomConfig.excludedJobs.includes(j));
+  return fullRandomConfig.includeMonsterMaster ? ['モンスターマスター', ...heroPool] : heroPool;
+}
+
+const quickState = {
+  job: 'モンスターマスター',
+  fullRandom: true,    // trueなら「ランダム選出」のたびに職業も抽選し直す（初期値：職業もランダム）
+  compatFilter: true,
+  armorAptitude: true,
+  monsterNames: [null, null, null], // 3枠すべてモンスター名（またはnull）。モンスターマスター以外なら[0]は使わない
+  weapon: null,
+  shield: null,
+  armor: null
+};
 
 function makeEmptyHero() {
   return { kind: 'hero', job: '', weapon: '', shield: '', armor: '' };
@@ -972,6 +1360,14 @@ function persistParties() {
   }
 }
 
+// 他のタブ／ウィンドウでデータが更新されたら自動で追従する
+window.addEventListener('storage', (e) => {
+  if (e.key === STORAGE_KEY) {
+    loadParties();
+    renderPartyList();
+  }
+});
+
 function escapeHtml(str) {
   if (str === null || str === undefined) return '';
   return String(str)
@@ -987,9 +1383,21 @@ function renderTagList(arr, cls) {
   return arr.map(t => `<span class="tag ${cls}">${escapeHtml(t)}</span>`).join('');
 }
 
-function buildMonsterInfoHtml(name) {
+// 第3のワザは「主人公の職業がモンスターのthirdSkillJobと一致する場合」のみ条件付きで解放される。
+// 職業が「勇者」の場合は、thirdSkillJobが設定されている全モンスターで解放される。
+function isThirdSkillUnlocked(monsterData, heroJob) {
+  if (!heroJob) return false;
+  if (!monsterData.thirdSkillJob || monsterData.thirdSkillJob.length === 0) return false;
+  if (heroJob === '勇者') return true;
+  return monsterData.thirdSkillJob.includes(heroJob);
+}
+
+function buildMonsterInfoHtml(name, heroJob) {
   const data = MONSTER_DATA[name];
   if (!data) return '';
+  const thirdSkillRow = isThirdSkillUnlocked(data, heroJob)
+    ? `<div class="info-row"><span class="info-row-label">第3のワザ</span>${renderTagList(data.thirdSkillJob, 'tag-third')}</div>`
+    : '';
   return `
     <div class="monster-info-name">
       ${escapeHtml(name)}
@@ -999,21 +1407,148 @@ function buildMonsterInfoHtml(name) {
     <div class="info-row"><span class="info-row-label">タイプ</span>${renderTagList(data.type, 'tag-type')}</div>
     <div class="info-row"><span class="info-row-label">生息地</span>${renderTagList(data.habitat, 'tag-habitat')}</div>
     <div class="info-row"><span class="info-row-label">その他</span>${renderTagList(data.others, 'tag-others')}</div>
-    <div class="info-row"><span class="info-row-label">第3のワザ</span>${renderTagList(data.thirdSkillJob, 'tag-third')}</div>
+    ${thirdSkillRow}
   `;
 }
 
 function buildMonsterInfoHtmlCompact(name) {
   const data = MONSTER_DATA[name];
-  if (!data) return `<div class="party-member-name">${escapeHtml(name)}</div>`;
-  const tags = [
-    ...(data.job || []).map(t => `<span class="tag tag-job">${escapeHtml(t)}</span>`),
-    ...(data.type || []).map(t => `<span class="tag tag-type">${escapeHtml(t)}</span>`)
-  ].join('');
   return `
     <div style="flex:1;min-width:0;">
-      <div class="party-member-name">${escapeHtml(name)}${data.isDLC ? ' <span class="dlc-flag">DLC</span>' : ''}</div>
-      <div class="party-member-tags">${tags}</div>
+      <div class="party-member-name">${escapeHtml(name)}${data && data.isDLC ? ' <span class="dlc-flag">DLC</span>' : ''}</div>
+    </div>
+  `;
+}
+
+// ============================================================
+// 相性判定
+// ------------------------------------------------------------
+// 【仕様】
+// ・相性は「パーティの3枠が揃って」初めて成立する。個数カウント（×2など）の概念はない。
+// ・モンスター3体構成：3体すべてが同じ「タイプ／生息地／その他」を持つとき、その相性が成立する。
+//   ※職業相性はモンスターだけでは成立しない（主人公の職業が必要）。
+// ・主人公＋モンスター2体構成：
+//     職業相性 … 主人公の職業と、モンスター2体が持つ職業相性が一致したとき成立
+//     生息地相性 … 主人公の職業に紐づく生息地と、モンスター2体の生息地が一致したとき成立
+//     タイプ／その他 … 主人公は持たないため、モンスター2体が同じものを持っていても成立しない
+// ・勇者：全モンスターと相性が発生する。勇者＋モンスター2体が揃った時点で「勇者」の職業相性が成立する。
+//   （勇者の生息地相性は、他職業と同じくモンスター2体の生息地が一致したときのみ成立）
+// ============================================================
+
+// 主人公の職業に紐づく生息地（職業ごとに1つの組み合わせ）
+const HERO_JOB_HABITAT = {
+  '戦士': '荒野/ダンジョン',
+  '魔法使い': '草原/森',
+  '武闘家': '森/荒野',
+  '僧侶': '森/ダンジョン',
+  'バトルマスター': '草原/荒野',
+  '賢者': '山/ダンジョン',
+  '勇者': '草原/ダンジョン'
+};
+
+// 括弧書きの効果（「（ちからアップ）」など）を除いた相性名を返す
+function stripEffect(tag) {
+  return String(tag).split('（')[0];
+}
+
+// 相性名（効果込みの表示用文字列）を、括弧を除いたキーで比較するための配列を返す
+function tagKeys(arr) {
+  return (arr || []).map(stripEffect);
+}
+
+// 全員が共通して持つタグ名（効果込みの元の文字列）を返す。メンバーが0人なら空。
+function commonTags(monsterNames, field) {
+  if (monsterNames.length === 0) return [];
+  const first = MONSTER_DATA[monsterNames[0]][field] || [];
+  return first.filter(tag => {
+    const key = stripEffect(tag);
+    return monsterNames.every(n => tagKeys(MONSTER_DATA[n][field]).includes(key));
+  });
+}
+
+// パーティで「現在成立している相性」を返す。
+// 戻り値: { complete: boolean, items: [{ label, name, cls }] }
+function getActiveCompat(party) {
+  const slots = party.slots || [];
+  const heroSlot = slots.find(s => s && s.kind === 'hero');
+  const heroJob = heroSlot ? (heroSlot.job || '') : '';
+  const monsterNames = slots
+    .filter(s => s && s.kind === 'monster' && s.name && MONSTER_DATA[s.name])
+    .map(s => s.name);
+
+  const items = [];
+
+  if (heroSlot) {
+    // ---- 主人公＋モンスター2体 ----
+    if (monsterNames.length !== 2) return { complete: false, items };
+    if (!heroJob) return { complete: true, items };  // 職業未選択なら職業由来の相性は成立しない
+
+    // 職業相性
+    if (heroJob === '勇者') {
+      // 勇者は全モンスターと相性が発生するため、2体揃った時点で成立
+      items.push({ label: '職業', name: '勇者', cls: 'tag-job' });
+    } else {
+      const bothHaveJob = monsterNames.every(n => getMonsterBaseJobs(n).includes(heroJob));
+      if (bothHaveJob) {
+        // 表示は、モンスター側のデータにある効果付きの職業名を用いる
+        const jobTag = (MONSTER_DATA[monsterNames[0]].job || []).find(t => stripEffect(t) === heroJob);
+        items.push({ label: '職業', name: jobTag || heroJob, cls: 'tag-job' });
+      }
+    }
+
+    // 生息地相性（主人公の職業に紐づく生息地とモンスター2体が一致）
+    const heroHabitat = HERO_JOB_HABITAT[heroJob];
+    if (heroHabitat && monsterNames.every(n => (MONSTER_DATA[n].habitat || []).includes(heroHabitat))) {
+      items.push({ label: '生息地', name: heroHabitat, cls: 'tag-habitat' });
+    }
+
+    return { complete: true, items };
+  }
+
+  // ---- モンスター3体 ----
+  if (monsterNames.length !== 3) return { complete: false, items };
+
+  commonTags(monsterNames, 'type').forEach(t => items.push({ label: 'タイプ', name: t, cls: 'tag-type' }));
+  commonTags(monsterNames, 'habitat').forEach(t => items.push({ label: '生息地', name: t, cls: 'tag-habitat' }));
+  commonTags(monsterNames, 'others').forEach(t => items.push({ label: 'その他', name: t, cls: 'tag-others' }));
+  return { complete: true, items };
+}
+
+// 第3のワザ：主人公の職業とモンスターのthirdSkillJobが一致するモンスターを返す（既存仕様）
+function getThirdSkillMonsters(party) {
+  const slots = party.slots || [];
+  const heroSlot = slots.find(s => s && s.kind === 'hero');
+  if (!heroSlot || !heroSlot.job) return [];
+  return slots
+    .filter(s => s && s.kind === 'monster' && s.name && MONSTER_DATA[s.name])
+    .map(s => s.name)
+    .filter(n => isThirdSkillUnlocked(MONSTER_DATA[n], heroSlot.job));
+}
+
+function buildPartyCompatHtml(party) {
+  const { complete, items } = getActiveCompat(party);
+  const thirdMonsters = getThirdSkillMonsters(party);
+
+  let body;
+  if (!complete) {
+    body = '<div class="party-compat-empty">3枠そろうと相性が判定されます</div>';
+  } else if (items.length === 0) {
+    body = '<div class="party-compat-empty">成立している相性はありません</div>';
+  } else {
+    body = items.map(it =>
+      `<span class="tag ${it.cls}">${escapeHtml(it.name)}</span>`
+    ).join('');
+  }
+
+  const thirdHtml = (complete && thirdMonsters.length)
+    ? `<div class="info-row party-compat-third"><span class="info-row-label">第3のワザ</span>${thirdMonsters.map(n => `<span class="tag tag-third">${escapeHtml(n)}</span>`).join('')}</div>`
+    : '';
+
+  return `
+    <div class="party-compat-box">
+      <div class="party-compat-title">成立している相性</div>
+      <div class="party-compat-list">${body}</div>
+      ${thirdHtml}
     </div>
   `;
 }
@@ -1027,12 +1562,13 @@ function buildJobOptions(selected) {
 }
 
 // 武器・盾・鎧の検索付きコンボ欄（モンスター選択枠と同様のUI）
-function buildItemComboHtml(slotIdx, field, label, currentValue) {
+function buildItemComboHtml(slotIdx, field, label, currentValue, placeholderOverride) {
+  const placeholder = placeholderOverride || `${label}を検索...`;
   return `
     <div class="hero-field">
       <label>${label}</label>
       <div class="combo-wrap item-combo-wrap" data-slot="${slotIdx}" data-field="${field}">
-        <input type="text" class="combo-input item-combo-input" placeholder="${label}を検索..." autocomplete="off"
+        <input type="text" class="combo-input item-combo-input" placeholder="${escapeHtml(placeholder)}" autocomplete="off"
           data-slot="${slotIdx}" data-field="${field}" value="${escapeHtml(currentValue || '')}">
         <div class="combo-list item-combo-list" data-slot="${slotIdx}" data-field="${field}"></div>
       </div>
@@ -1041,6 +1577,9 @@ function buildItemComboHtml(slotIdx, field, label, currentValue) {
 }
 
 function buildHeroFormHtml(slotIdx, hero) {
+  const weaponPlaceholder = hero.job && JOB_ALLOWED_WEAPON_JOBS[hero.job] ? '装備可能な武器を検索...' : '武器を検索...';
+  const armorAptitude = document.getElementById('armorAptitudeCheckbox').checked;
+  const armorPlaceholder = hero.job && armorAptitude && JOB_APTITUDE_ARMOR_LIST[hero.job] ? '適性のある鎧を検索...' : '鎧を検索...';
   return `
     <div class="hero-form" data-slot="${slotIdx}">
       <div class="hero-field">
@@ -1049,9 +1588,9 @@ function buildHeroFormHtml(slotIdx, hero) {
           ${buildJobOptions(hero.job)}
         </select>
       </div>
-      ${buildItemComboHtml(slotIdx, 'weapon', '武器', hero.weapon)}
+      ${buildItemComboHtml(slotIdx, 'weapon', '武器', hero.weapon, weaponPlaceholder)}
       ${buildItemComboHtml(slotIdx, 'shield', '盾', hero.shield)}
-      ${buildItemComboHtml(slotIdx, 'armor', '鎧', hero.armor)}
+      ${buildItemComboHtml(slotIdx, 'armor', '鎧', hero.armor, armorPlaceholder)}
     </div>
   `;
 }
@@ -1083,13 +1622,15 @@ function renderSlots() {
       bodyHtml = buildHeroFormHtml(i, slotData);
     } else {
       const currentName = isMonster ? slotData.name : '';
+      const heroSlot = state.slots[0];
+      const activeHeroJob = (heroSlot && heroSlot.kind === 'hero') ? heroSlot.job : null;
       bodyHtml = `
         <div class="combo-wrap monster-combo-wrap" data-slot="${i}">
           <input type="text" class="combo-input monster-combo-input" placeholder="モンスター名で検索..." autocomplete="off" data-slot="${i}" value="${escapeHtml(currentName)}">
           <div class="combo-list monster-combo-list" data-slot="${i}"></div>
         </div>
         <div class="monster-info" data-slot="${i}">
-          ${currentName ? buildMonsterInfoHtml(currentName) : '<div class="placeholder">モンスターを選択してください</div>'}
+          ${currentName ? buildMonsterInfoHtml(currentName, activeHeroJob) : '<div class="placeholder">モンスターを選択してください</div>'}
         </div>
         ${currentName ? `<button class="clear-slot-btn" data-slot="${i}">選択解除</button>` : ''}
       `;
@@ -1146,6 +1687,18 @@ function attachSlotEvents() {
       const slot = parseInt(sel.dataset.slot, 10);
       if (state.slots[slot] && state.slots[slot].kind === 'hero') {
         state.slots[slot].job = sel.value;
+        // 新しい職業で今の武器が装備できなくなる場合は選択をクリアする
+        const equippable = getEquippableWeaponNames(sel.value);
+        if (state.slots[slot].weapon && !equippable.includes(state.slots[slot].weapon)) {
+          state.slots[slot].weapon = '';
+        }
+        // 新しい職業（と現在の適性チェック状態）で今の鎧が対象外になる場合も選択をクリアする
+        const armorAptitude = document.getElementById('armorAptitudeCheckbox').checked;
+        const eligibleArmor = getEligibleArmorNames(sel.value, armorAptitude);
+        if (state.slots[slot].armor && !eligibleArmor.includes(state.slots[slot].armor)) {
+          state.slots[slot].armor = '';
+        }
+        renderSlots();
       }
     });
   });
@@ -1170,17 +1723,30 @@ function attachSlotEvents() {
 }
 
 const ITEM_FIELD_LIST = {
-  weapon: ITEM_DATA.weapons,
-  shield: ITEM_DATA.shields,
-  armor: ITEM_DATA.armors
+  shield: ITEM_DATA.shields.filter(s => !STARTER_EQUIP_EXCLUDE.includes(s)),
+  armor: ITEM_DATA.armors.filter(a => !STARTER_EQUIP_EXCLUDE.includes(a))
 };
+
+// 武器・鎧欄は主人公の職業（と適性チェックの状態）に応じた絞り込みが必要なため専用の取得関数を用意する
+function getItemSourceList(slot, field) {
+  const s = state.slots[slot];
+  const job = (s && s.kind === 'hero') ? s.job : null;
+  if (field === 'weapon') {
+    return getEquippableWeaponNames(job);
+  }
+  if (field === 'armor') {
+    const applyAptitude = document.getElementById('armorAptitudeCheckbox').checked;
+    return getEligibleArmorNames(job, applyAptitude);
+  }
+  return ITEM_FIELD_LIST[field] || [];
+}
 
 function onItemComboInput(e) {
   const slot = parseInt(e.target.dataset.slot, 10);
   const field = e.target.dataset.field;
   const query = e.target.value.trim();
   const list = document.querySelector(`.item-combo-list[data-slot="${slot}"][data-field="${field}"]`);
-  const sourceList = ITEM_FIELD_LIST[field] || [];
+  const sourceList = getItemSourceList(slot, field);
   let matches;
   if (!query) {
     matches = sourceList;
@@ -1238,7 +1804,7 @@ function getActiveJobFilter() {
 }
 
 function getFilteredMonsterNames(query) {
-  let pool = MONSTER_NAMES;
+  let pool = getAvailableMonsterNames();
   if (query) {
     pool = pool.filter(n => n.includes(query));
   }
@@ -1297,14 +1863,19 @@ function buildHeroCompactHtml(hero) {
   `;
 }
 
+function partyContainsDlcMonster(party) {
+  return (party.slots || []).some(s => s && s.kind === 'monster' && s.name && MONSTER_DATA[s.name] && MONSTER_DATA[s.name].isDLC);
+}
+
 function renderPartyList() {
   const wrap = document.getElementById('partyListWrap');
   const countBadge = document.getElementById('countBadge');
   const searchTerm = document.getElementById('searchSaved').value.trim().toLowerCase();
+  const hideDlcParties = document.getElementById('hideDlcPartiesCheckbox').checked;
 
   let filtered = state.parties;
   if (searchTerm) {
-    filtered = state.parties.filter(p => {
+    filtered = filtered.filter(p => {
       const inName = p.name.toLowerCase().includes(searchTerm);
       const inMembers = (p.slots || []).some(s => {
         if (!s) return false;
@@ -1315,6 +1886,9 @@ function renderPartyList() {
       const inMemo = (p.memo || '').toLowerCase().includes(searchTerm);
       return inName || inMembers || inMemo;
     });
+  }
+  if (hideDlcParties) {
+    filtered = filtered.filter(p => !partyContainsDlcMonster(p));
   }
 
   countBadge.textContent = `${state.parties.length}件保存中`;
@@ -1358,6 +1932,7 @@ function renderPartyList() {
           `;
         }).join('')}
       </div>
+      ${buildPartyCompatHtml(p)}
       ${p.memo ? `<div class="party-memo">${escapeHtml(p.memo)}</div>` : ''}
       <div class="party-card-actions">
         <button class="edit-btn" data-id="${p.id}">編集</button>
@@ -1566,99 +2141,188 @@ document.getElementById('saveBtn').addEventListener('click', () => {
 
 document.getElementById('searchSaved').addEventListener('input', renderPartyList);
 
-// エクスポート
-document.getElementById('exportBtn').addEventListener('click', () => {
-  const payload = {
-    exportedAt: Date.now(),
-    version: 2,
-    parties: state.parties
+// ============================================================
+// エクスポート / インポート（クロスデバイス対応）
+// ============================================================
+
+// 1件のパーティを、旧形式(members)も含めて現行形式へ正規化する
+function normalizeImportedParty(p) {
+  if (!p || typeof p !== 'object') return null;
+  let slots;
+  if (Array.isArray(p.slots)) {
+    slots = p.slots.map(s => {
+      if (!s) return null;
+      if (s.kind === 'hero') {
+        return { kind: 'hero', job: s.job || '', weapon: s.weapon || '', shield: s.shield || '', armor: s.armor || '' };
+      }
+      if (s.kind === 'monster' && s.name) {
+        return { kind: 'monster', name: s.name };
+      }
+      return null;
+    });
+  } else if (Array.isArray(p.members)) {
+    slots = p.members.map(m => m ? { kind: 'monster', name: m } : null);
+  } else {
+    slots = [null, null, null];
+  }
+  while (slots.length < 3) slots.push(null);
+  const now = Date.now();
+  return {
+    id: (typeof p.id === 'string' && p.id) ? p.id : ('p_' + now + '_' + Math.random().toString(36).slice(2, 8)),
+    name: (typeof p.name === 'string' && p.name) ? p.name : '無題のパーティ',
+    memo: typeof p.memo === 'string' ? p.memo : '',
+    slots: slots.slice(0, 3),
+    createdAt: Number(p.createdAt) || now,
+    updatedAt: Number(p.updatedAt) || Number(p.createdAt) || now
   };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+}
+
+// 書き込み後にlocalStorageから読み直し、件数が一致するか検証する
+function persistPartiesVerified() {
+  try {
+    const json = JSON.stringify(state.parties);
+    localStorage.setItem(STORAGE_KEY, json);
+    const back = localStorage.getItem(STORAGE_KEY);
+    if (back !== json) return { ok: false, reason: '書き込み内容の検証に失敗しました' };
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, reason: (e && e.name === 'QuotaExceededError') ? '保存容量の上限に達しました' : 'ブラウザが保存を許可していません（プライベートモード等）' };
+  }
+}
+
+function buildExportPayload() {
+  return { app: 'DQMBV-PartyBuildApp', exportedAt: Date.now(), version: 2, parties: state.parties };
+}
+
+function buildExportFileName() {
   const pad = n => String(n).padStart(2, '0');
   const d = new Date();
-  const fname = `dqmbv_parties_${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.json`;
+  return `dqmbv_parties_${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.json`;
+}
+
+function downloadJsonFallback(json, fname) {
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
   a.href = url;
   a.download = fname;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+document.getElementById('exportBtn').addEventListener('click', async () => {
+  const json = JSON.stringify(buildExportPayload(), null, 2);
+  const fname = buildExportFileName();
+
+  // iPhone/iPad(Safari/Edge)では a[download] が効かない場合があるため、共有シートを優先する
+  try {
+    if (navigator.canShare && typeof File === 'function') {
+      const file = new File([json], fname, { type: 'application/json' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: fname });
+        showSaveStatus('エクスポートしました');
+        return;
+      }
+    }
+  } catch (e) {
+    if (e && e.name === 'AbortError') return; // ユーザーが共有をキャンセル
+    // それ以外の失敗は通常のダウンロードにフォールバック
+  }
+  downloadJsonFallback(json, fname);
+  showSaveStatus('エクスポートしました');
 });
 
 // インポート
+let pendingImport = null; // 取り込み確認待ちのパーティ配列
+
 document.getElementById('importBtn').addEventListener('click', () => {
   document.getElementById('importFileInput').click();
 });
 
+function parseImportText(text) {
+  // BOM除去
+  const clean = String(text).replace(/^\uFEFF/, '').trim();
+  const parsed = JSON.parse(clean);
+  let list;
+  if (Array.isArray(parsed)) list = parsed;
+  else if (parsed && Array.isArray(parsed.parties)) list = parsed.parties;
+  else throw new Error('invalid format');
+  return list.map(normalizeImportedParty).filter(Boolean);
+}
+
+function showImportConfirm(items) {
+  pendingImport = items;
+  document.getElementById('importConfirmText').textContent =
+    `${items.length}件のパーティが見つかりました。現在は${state.parties.length}件保存されています。`;
+  document.getElementById('importOverlay').classList.add('open');
+}
+
+function hideImportConfirm() {
+  pendingImport = null;
+  document.getElementById('importOverlay').classList.remove('open');
+}
+
+// mode: 'merge'（追加・同一IDは上書き）/ 'replace'（置き換え）
+function applyImport(mode) {
+  if (!pendingImport) return;
+  const items = pendingImport;
+  const before = state.parties;
+  let next;
+  if (mode === 'replace') {
+    next = items.slice();
+  } else {
+    // 同一IDは新しい方(updatedAtが大きい方)を採用、それ以外は追加
+    const map = new Map(before.map(p => [p.id, p]));
+    items.forEach(p => {
+      const cur = map.get(p.id);
+      if (!cur || (p.updatedAt || 0) >= (cur.updatedAt || 0)) map.set(p.id, p);
+    });
+    next = [...map.values()];
+  }
+  state.parties = next;
+  const result = persistPartiesVerified();
+  if (result.ok) {
+    showSaveStatus(`インポート完了：現在${state.parties.length}件`);
+    renderPartyList();
+  } else {
+    state.parties = before; // 失敗時は元に戻す
+    renderPartyList();
+    showSaveStatus('インポート失敗：' + result.reason, true);
+  }
+  hideImportConfirm();
+}
+
+document.getElementById('importMergeBtn').addEventListener('click', () => applyImport('merge'));
+document.getElementById('importReplaceBtn').addEventListener('click', () => applyImport('replace'));
+document.getElementById('importCancelBtn').addEventListener('click', hideImportConfirm);
+document.getElementById('importOverlay').addEventListener('click', (e) => {
+  if (e.target.id === 'importOverlay') hideImportConfirm();
+});
+
 document.getElementById('importFileInput').addEventListener('change', (e) => {
-  const file = e.target.files[0];
+  const input = e.target;
+  const file = input.files && input.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (ev) => {
     try {
-      const parsed = JSON.parse(ev.target.result);
-      let importedParties = [];
-      if (Array.isArray(parsed)) {
-        importedParties = parsed;
-      } else if (parsed && Array.isArray(parsed.parties)) {
-        importedParties = parsed.parties;
+      const items = parseImportText(ev.target.result);
+      if (items.length === 0) {
+        showSaveStatus('取り込めるパーティがファイルに含まれていません', true);
       } else {
-        throw new Error('invalid format');
-      }
-
-      // 旧形式(members)にも対応しつつ正規化
-      const normalized = importedParties.map(p => {
-        let slots;
-        if (Array.isArray(p.slots)) {
-          slots = p.slots.map(s => {
-            if (!s) return null;
-            if (s.kind === 'hero') {
-              return { kind: 'hero', job: s.job || '', weapon: s.weapon || '', shield: s.shield || '', armor: s.armor || '' };
-            }
-            if (s.kind === 'monster' && s.name) {
-              return { kind: 'monster', name: s.name };
-            }
-            return null;
-          });
-        } else if (Array.isArray(p.members)) {
-          slots = p.members.map(m => m ? { kind: 'monster', name: m } : null);
-        } else {
-          slots = [null, null, null];
-        }
-        while (slots.length < 3) slots.push(null);
-        return {
-          id: p.id || ('p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8)),
-          name: p.name || '無題のパーティ',
-          memo: p.memo || '',
-          slots: slots.slice(0, 3),
-          createdAt: p.createdAt || Date.now()
-        };
-      });
-
-      // 既存IDと重複しないようにマージ（同一IDがあれば新しいIDを振り直す）
-      const existingIds = new Set(state.parties.map(p => p.id));
-      normalized.forEach(p => {
-        if (existingIds.has(p.id)) {
-          p.id = 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
-        }
-        existingIds.add(p.id);
-      });
-
-      state.parties = state.parties.concat(normalized);
-      const ok = persistParties();
-      if (ok) {
-        showSaveStatus(`${normalized.length}件のパーティをインポートしました`);
-        renderPartyList();
-      } else {
-        showSaveStatus('インポートの保存に失敗しました', true);
+        showImportConfirm(items);
       }
     } catch (err) {
       showSaveStatus('JSONファイルの読み込みに失敗しました', true);
     } finally {
-      e.target.value = '';
+      input.value = '';
     }
+  };
+  reader.onerror = () => {
+    showSaveStatus('ファイルを読み込めませんでした', true);
+    input.value = '';
   };
   reader.readAsText(file, 'utf-8');
 });
@@ -1671,6 +2335,260 @@ document.getElementById('jobFilterCheckbox').addEventListener('change', () => {
     }
   });
 });
+
+document.getElementById('armorAptitudeCheckbox').addEventListener('change', () => {
+  // 開いている鎧の検索候補があれば、その場で絞り込み条件を反映し直す
+  document.querySelectorAll('.item-combo-input[data-field="armor"]').forEach(input => {
+    if (document.activeElement === input) {
+      onItemComboInput({ target: input });
+    }
+  });
+});
+
+// ============================================================
+// タブ切り替え（「パーティ保存・一覧」 ⇔ 「即席構築」）
+// ============================================================
+document.querySelectorAll('.main-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+    document.getElementById('tabPanelSave').style.display = (tab === 'save') ? '' : 'none';
+    document.getElementById('tabPanelQuick').style.display = (tab === 'quick') ? '' : 'none';
+  });
+});
+
+// ============================================================
+// 即席構築タブ（保存領域とは完全に独立。ページを離れると内容は破棄される）
+// ============================================================
+
+function populateQuickJobSelect() {
+  const sel = document.getElementById('quickJobSelect');
+  const randomSelected = quickState.fullRandom;
+  const jobOptions = QUICK_JOB_OPTIONS.map(j => `<option value="${escapeHtml(j)}" ${(!randomSelected && j === quickState.job) ? 'selected' : ''}>${escapeHtml(j)}</option>`).join('');
+  const randomOption = `<option value="${QUICK_JOB_RANDOM_VALUE}" ${randomSelected ? 'selected' : ''}>🎲 職業ランダム</option>`;
+  sel.innerHTML = randomOption + jobOptions;
+}
+
+// 現在の即席構築の職業・相性チェック状態から、抽選対象となるモンスター名配列を返す
+function getQuickEligiblePool() {
+  const base = getAvailableMonsterNames();
+  if (quickState.job === 'モンスターマスター') {
+    return base;
+  }
+  if (!quickState.compatFilter || quickState.job === '勇者') {
+    return base;
+  }
+  const job = quickState.job;
+  return base.filter(n => getMonsterBaseJobs(n).includes(job));
+}
+
+function pickRandomUnique(pool, count, excludeNames) {
+  const excludeSet = new Set(excludeNames || []);
+  const candidates = pool.filter(n => !excludeSet.has(n));
+  const shuffled = [...candidates];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, count);
+}
+
+function isMonsterMasterMode() {
+  return quickState.job === 'モンスターマスター';
+}
+
+// 完全ランダムで、まだ一度も職業が抽選されていない状態か
+function isFullRandomPending() {
+  return quickState.fullRandom && quickState.monsterNames.every(n => !n);
+}
+
+// 装備1点をランダムに選出するヘルパー（配列からランダムに1件、なければnull）
+function pickRandomOne(list) {
+  if (!list || list.length === 0) return null;
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function pickRandomWeaponForQuickJob() {
+  const equippable = getEquippableWeaponNames(quickState.job);
+  return pickRandomOne(equippable);
+}
+function pickRandomShield() {
+  return pickRandomOne(ITEM_DATA.shields.filter(s => !STARTER_EQUIP_EXCLUDE.includes(s)));
+}
+function pickRandomArmor() {
+  return pickRandomOne(getEligibleArmorNames(quickState.job, quickState.armorAptitude));
+}
+
+document.getElementById('quickJobSelect').addEventListener('change', (e) => {
+  if (e.target.value === QUICK_JOB_RANDOM_VALUE) {
+    // 完全ランダムモードへ。職業は「ランダム選出」ボタンで決まるため、それまで枠は空にしておく
+    quickState.fullRandom = true;
+    quickState.monsterNames = [null, null, null];
+    quickState.weapon = null;
+    quickState.shield = null;
+    quickState.armor = null;
+    renderQuickSlots();
+    return;
+  }
+  quickState.fullRandom = false;
+  quickState.job = e.target.value;
+  // 職業モードが切り替わったら、枠構成が変わるため一旦クリアする
+  quickState.monsterNames = [null, null, null];
+  if (isMonsterMasterMode()) {
+    // モンスターマスターは装備選択を行わないためクリア
+    quickState.weapon = null;
+    quickState.shield = null;
+    quickState.armor = null;
+  } else {
+    // 新しい職業で今の武器・鎧が装備できなくなる場合は選択をクリアする（盾は職業共通のため維持）
+    const equippable = getEquippableWeaponNames(quickState.job);
+    if (quickState.weapon && !equippable.includes(quickState.weapon)) {
+      quickState.weapon = null;
+    }
+    const eligibleArmor = getEligibleArmorNames(quickState.job, quickState.armorAptitude);
+    if (quickState.armor && !eligibleArmor.includes(quickState.armor)) {
+      quickState.armor = null;
+    }
+  }
+  renderQuickSlots();
+});
+
+document.getElementById('quickCompatCheckbox').addEventListener('change', (e) => {
+  quickState.compatFilter = e.target.checked;
+});
+
+document.getElementById('quickArmorAptitudeCheckbox').addEventListener('change', (e) => {
+  quickState.armorAptitude = e.target.checked;
+  // 適性チェックの切り替えで、現在の鎧が対象外になる場合はクリアする
+  if (!isMonsterMasterMode() && quickState.armor) {
+    const eligibleArmor = getEligibleArmorNames(quickState.job, quickState.armorAptitude);
+    if (!eligibleArmor.includes(quickState.armor)) {
+      quickState.armor = null;
+      renderQuickSlots();
+    }
+  }
+});
+
+document.getElementById('quickRandomBtn').addEventListener('click', () => {
+  if (quickState.fullRandom) {
+    const jobPool = getFullRandomJobPool();
+    const pickedJob = pickRandomOne(jobPool);
+    if (pickedJob) quickState.job = pickedJob;
+  }
+  const pool = getQuickEligiblePool();
+  const needCount = isMonsterMasterMode() ? 3 : 2;
+  const picked = pickRandomUnique(pool, needCount, []);
+  const names = [null, null, null];
+  if (isMonsterMasterMode()) {
+    names[0] = picked[0] || null;
+    names[1] = picked[1] || null;
+    names[2] = picked[2] || null;
+  } else {
+    // 1枠目は主人公（表示専用）、2・3枠目にモンスター
+    names[1] = picked[0] || null;
+    names[2] = picked[1] || null;
+  }
+  quickState.monsterNames = names;
+
+  // モンスターマスター以外の場合は装備もあわせてランダム選出する
+  if (!isMonsterMasterMode()) {
+    quickState.weapon = pickRandomWeaponForQuickJob();
+    quickState.shield = pickRandomShield();
+    quickState.armor = pickRandomArmor();
+  } else {
+    quickState.weapon = null;
+    quickState.shield = null;
+    quickState.armor = null;
+  }
+
+  renderQuickSlots();
+});
+
+function rerollQuickSlot(slotIdx) {
+  const pool = getQuickEligiblePool();
+  const currentOthers = quickState.monsterNames.filter((n, idx) => idx !== slotIdx && n);
+  const picked = pickRandomUnique(pool, 1, currentOthers);
+  if (picked.length > 0) {
+    quickState.monsterNames[slotIdx] = picked[0];
+    renderQuickSlots();
+  }
+}
+
+function rerollQuickEquip(field) {
+  if (isMonsterMasterMode()) return;
+  if (field === 'weapon') {
+    quickState.weapon = pickRandomWeaponForQuickJob();
+  } else if (field === 'shield') {
+    quickState.shield = pickRandomShield();
+  } else if (field === 'armor') {
+    quickState.armor = pickRandomArmor();
+  }
+  renderQuickSlots();
+}
+
+function renderQuickSlots() {
+  const grid = document.getElementById('quickSlotGrid');
+  grid.innerHTML = '';
+
+  for (let i = 0; i < 3; i++) {
+    const isHeroSlot = (i === 0 && !isMonsterMasterMode() && !isFullRandomPending());
+    const slot = document.createElement('div');
+    slot.className = 'slot' + (isHeroSlot ? ' slot-hero' : '');
+
+    if (isHeroSlot) {
+      const equipRow = (field, label, value) => `
+        <div class="quick-equip-row">
+          <div class="quick-equip-info">
+            <span class="eq-label">${label}</span>${value ? escapeHtml(value) : '<span style="color:var(--text-faint);">未選出</span>'}
+          </div>
+          <button type="button" class="reroll-btn reroll-btn-small" data-equip-field="${field}" title="${label}だけ再抽選">🔄</button>
+        </div>
+      `;
+      slot.innerHTML = `
+        <div class="slot-label-row">
+          <div class="slot-label">主人公 1</div>
+        </div>
+        <div class="monster-info">
+          <div class="monster-info-name">${escapeHtml(quickState.job)}<span class="hero-badge">主人公</span>${quickState.fullRandom ? '<span class="dlc-flag" style="margin-left:6px;">職業ランダム</span>' : ''}</div>
+          <div class="quick-equip-list">
+            ${equipRow('weapon', '武器', quickState.weapon)}
+            ${equipRow('shield', '盾', quickState.shield)}
+            ${equipRow('armor', '鎧', quickState.armor)}
+          </div>
+        </div>
+      `;
+    } else {
+      const name = quickState.monsterNames[i];
+      slot.innerHTML = `
+        <div class="quick-slot-header-row">
+          <div class="slot-label">モンスター ${i + 1}</div>
+          <button type="button" class="reroll-btn" data-slot="${i}" title="この枠だけ再抽選">🔄</button>
+        </div>
+        <div class="monster-info">
+          ${name ? buildMonsterInfoHtml(name, quickState.job) : `<div class="placeholder">${isFullRandomPending() ? '「ランダム選出」で職業ごと抽選します' : '「ランダム選出」ボタンを押してください'}</div>`}
+        </div>
+      `;
+    }
+    grid.appendChild(slot);
+  }
+
+  grid.querySelectorAll('.reroll-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.equipField) {
+        rerollQuickEquip(btn.dataset.equipField);
+      } else {
+        rerollQuickSlot(parseInt(btn.dataset.slot, 10));
+      }
+    });
+  });
+}
+
+function initQuickTab() {
+  populateQuickJobSelect();
+  document.getElementById('quickCompatCheckbox').checked = quickState.compatFilter;
+  document.getElementById('quickArmorAptitudeCheckbox').checked = quickState.armorAptitude;
+  renderQuickSlots();
+}
 
 // ============================================================
 // 謝辞・データ出典モーダル
@@ -1687,11 +2605,29 @@ document.getElementById('creditOverlay').addEventListener('click', (e) => {
   }
 });
 
+// ============================================================
+// DLCモンスターの表示/抽選 グローバル切り替え
+// ============================================================
+document.getElementById('includeDlcCheckbox').addEventListener('change', (e) => {
+  dlcSettingState.includeDlc = e.target.checked;
+  persistDlcSetting();
+  // パーティ編成タブ・即席構築タブ両方の検索候補に反映するため再描画する
+  renderSlots();
+  renderQuickSlots();
+});
+
+document.getElementById('hideDlcPartiesCheckbox').addEventListener('change', () => {
+  renderPartyList();
+});
+
 function init() {
+  loadDlcSetting();
+  document.getElementById('includeDlcCheckbox').checked = dlcSettingState.includeDlc;
   loadParties();
   renderSlots();
   renderPartyList();
   updateEditModeUI();
+  initQuickTab();
 }
 
 init();
