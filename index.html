@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DQMBV パーティ保存ツール Ver1.19</title>
+<title>DQMBV パーティ保存ツール Ver1.21</title>
 <style>
 
 :root {
@@ -1135,6 +1135,10 @@ button.primary-btn:disabled {
           <span>職業相性</span>
         </label>
         <label class="job-filter-toggle quick-compat-toggle">
+          <input type="checkbox" id="quickHabitatCompatCheckbox">
+          <span>生息地相性</span>
+        </label>
+        <label class="job-filter-toggle quick-compat-toggle">
           <input type="checkbox" id="quickArmorAptitudeCheckbox" checked>
           <span>職業にあった鎧にする</span>
         </label>
@@ -1145,6 +1149,11 @@ button.primary-btn:disabled {
       </div>
 
       <div class="slot-grid" id="quickSlotGrid"></div>
+
+      <div class="party-compat-box quick-compat-box">
+        <div class="party-compat-title">発生している相性</div>
+        <div id="quickCompatPanel"></div>
+      </div>
     </section>
   </div>
 
@@ -1203,7 +1212,7 @@ const JOB_ALLOWED_WEAPON_JOBS = {
   '僧侶': [8, 40],
   'バトルマスター': [16, 17, 20, 81],
   '賢者': [2, 8, 32, 34, 40, 42],
-  '勇者': [2, 8, 64, 81]
+  '勇者': [64, 81] // 実機仕様：剣全般(81)と勇者専用融合武器(64)のみ。短剣(2,8)・杖(32,34,40,42)は対象外
 };
 
 // 職業に応じて装備可能な武器名の配列を返す。
@@ -1308,6 +1317,7 @@ const quickState = {
   job: 'モンスターマスター',
   fullRandom: true,    // trueなら「ランダム選出」のたびに職業も抽選し直す（初期値：職業もランダム）
   compatFilter: true,
+  habitatCompatFilter: false, // 生息地相性で絞り込むか
   armorAptitude: true,
   monsterNames: [null, null, null], // 3枠すべてモンスター名（またはnull）。モンスターマスター以外なら[0]は使わない
   weapon: null,
@@ -1409,6 +1419,12 @@ function buildMonsterInfoHtml(name, heroJob) {
     <div class="info-row"><span class="info-row-label">その他</span>${renderTagList(data.others, 'tag-others')}</div>
     ${thirdSkillRow}
   `;
+}
+
+// 即席構築のモンスター枠用：名前とDLCフラグのみ表示する（相性の詳細は別枠にまとめるため省略）
+function buildQuickMonsterNameHtml(name) {
+  const data = MONSTER_DATA[name];
+  return `<div class="monster-info-name">${escapeHtml(name)}${data && data.isDLC ? ' <span class="dlc-flag">DLC</span>' : ''}</div>`;
 }
 
 function buildMonsterInfoHtmlCompact(name) {
@@ -2370,16 +2386,29 @@ function populateQuickJobSelect() {
 }
 
 // 現在の即席構築の職業・相性チェック状態から、抽選対象となるモンスター名配列を返す
+// 「職業相性」「生息地相性」はそれぞれ独立にON/OFFでき、両方ONの場合は両方を満たすモンスターのみに絞る。
+// 勇者は全モンスターと職業相性が発生するため職業相性フィルターの対象外だが、
+// 生息地相性（HERO_JOB_HABITAT）は他の職業と同じ仕組みで判定する。
 function getQuickEligiblePool() {
   const base = getAvailableMonsterNames();
   if (quickState.job === 'モンスターマスター') {
     return base;
   }
-  if (!quickState.compatFilter || quickState.job === '勇者') {
-    return base;
-  }
   const job = quickState.job;
-  return base.filter(n => getMonsterBaseJobs(n).includes(job));
+  let pool = base;
+
+  if (quickState.compatFilter && job !== '勇者') {
+    pool = pool.filter(n => getMonsterBaseJobs(n).includes(job));
+  }
+
+  if (quickState.habitatCompatFilter) {
+    const habitat = HERO_JOB_HABITAT[job];
+    if (habitat) {
+      pool = pool.filter(n => (MONSTER_DATA[n].habitat || []).includes(habitat));
+    }
+  }
+
+  return pool;
 }
 
 function pickRandomUnique(pool, count, excludeNames) {
@@ -2391,6 +2420,22 @@ function pickRandomUnique(pool, count, excludeNames) {
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled.slice(0, count);
+}
+
+// モンスターマスター用：生息地が一致する3体の組み合わせをランダムに1組返す（プール内に同じ生息地が3体以上いる場合のみ）。
+// 見つからない場合はnullを返す（呼び出し側は通常抽選にフォールバックする）。
+function pickMonsterTrioWithSharedHabitat(pool) {
+  const byHabitat = new Map();
+  pool.forEach(n => {
+    (MONSTER_DATA[n].habitat || []).forEach(h => {
+      if (!byHabitat.has(h)) byHabitat.set(h, []);
+      byHabitat.get(h).push(n);
+    });
+  });
+  const eligibleHabitats = [...byHabitat.entries()].filter(([, names]) => names.length >= 3);
+  if (eligibleHabitats.length === 0) return null;
+  const [, names] = eligibleHabitats[Math.floor(Math.random() * eligibleHabitats.length)];
+  return pickRandomUnique(names, 3, []);
 }
 
 function isMonsterMasterMode() {
@@ -2457,6 +2502,10 @@ document.getElementById('quickCompatCheckbox').addEventListener('change', (e) =>
   quickState.compatFilter = e.target.checked;
 });
 
+document.getElementById('quickHabitatCompatCheckbox').addEventListener('change', (e) => {
+  quickState.habitatCompatFilter = e.target.checked;
+});
+
 document.getElementById('quickArmorAptitudeCheckbox').addEventListener('change', (e) => {
   quickState.armorAptitude = e.target.checked;
   // 適性チェックの切り替えで、現在の鎧が対象外になる場合はクリアする
@@ -2477,7 +2526,12 @@ document.getElementById('quickRandomBtn').addEventListener('click', () => {
   }
   const pool = getQuickEligiblePool();
   const needCount = isMonsterMasterMode() ? 3 : 2;
-  const picked = pickRandomUnique(pool, needCount, []);
+  let picked;
+  if (isMonsterMasterMode() && quickState.habitatCompatFilter) {
+    picked = pickMonsterTrioWithSharedHabitat(pool) || pickRandomUnique(pool, needCount, []);
+  } else {
+    picked = pickRandomUnique(pool, needCount, []);
+  }
   const names = [null, null, null];
   if (isMonsterMasterMode()) {
     names[0] = picked[0] || null;
@@ -2507,7 +2561,18 @@ document.getElementById('quickRandomBtn').addEventListener('click', () => {
 function rerollQuickSlot(slotIdx) {
   const pool = getQuickEligiblePool();
   const currentOthers = quickState.monsterNames.filter((n, idx) => idx !== slotIdx && n);
-  const picked = pickRandomUnique(pool, 1, currentOthers);
+
+  let narrowedPool = pool;
+  if (isMonsterMasterMode() && quickState.habitatCompatFilter && currentOthers.length > 0) {
+    // 残りのモンスターと共通する生息地を持つ候補があれば、そちらに絞って抽選する
+    const sharedHabitats = commonTags(currentOthers, 'habitat');
+    if (sharedHabitats.length > 0) {
+      const candidates = pool.filter(n => (MONSTER_DATA[n].habitat || []).some(h => sharedHabitats.includes(h)));
+      if (candidates.length > 0) narrowedPool = candidates;
+    }
+  }
+
+  const picked = pickRandomUnique(narrowedPool, 1, currentOthers);
   if (picked.length > 0) {
     quickState.monsterNames[slotIdx] = picked[0];
     renderQuickSlots();
@@ -2524,6 +2589,50 @@ function rerollQuickEquip(field) {
     quickState.armor = pickRandomArmor();
   }
   renderQuickSlots();
+}
+
+// quickStateの現在の編成を、既存の相性判定ロジック（getActiveCompat / getThirdSkillMonsters）が
+// 扱える party.slots 形式に変換する。
+function buildQuickPartyForCompat() {
+  const monsterSlots = quickState.monsterNames
+    .filter(n => n && MONSTER_DATA[n])
+    .map(n => ({ kind: 'monster', name: n }));
+
+  if (isMonsterMasterMode()) {
+    return { slots: monsterSlots };
+  }
+  const heroSlot = { kind: 'hero', job: quickState.job || '', weapon: '', shield: '', armor: '' };
+  return { slots: [heroSlot, ...monsterSlots] };
+}
+
+// 即席構築の「現在発生している相性一覧」エリアを描画する
+function renderQuickCompatPanel() {
+  const panel = document.getElementById('quickCompatPanel');
+  if (!panel) return;
+
+  if (isFullRandomPending()) {
+    panel.innerHTML = '<div class="party-compat-empty">「ランダム選出」を押すと相性が判定されます</div>';
+    return;
+  }
+
+  const party = buildQuickPartyForCompat();
+  const { complete, items } = getActiveCompat(party);
+  const thirdMonsters = getThirdSkillMonsters(party);
+
+  let body;
+  if (!complete) {
+    body = '<div class="party-compat-empty">3枠そろうと相性が判定されます</div>';
+  } else if (items.length === 0) {
+    body = '<div class="party-compat-empty">成立している相性はありません</div>';
+  } else {
+    body = items.map(it => `<span class="tag ${it.cls}">${escapeHtml(it.name)}</span>`).join('');
+  }
+
+  const thirdHtml = (complete && thirdMonsters.length)
+    ? `<div class="info-row party-compat-third"><span class="info-row-label">第3のワザ</span>${thirdMonsters.map(n => `<span class="tag tag-third">${escapeHtml(n)}</span>`).join('')}</div>`
+    : '';
+
+  panel.innerHTML = `<div class="party-compat-list">${body}</div>${thirdHtml}`;
 }
 
 function renderQuickSlots() {
@@ -2565,12 +2674,14 @@ function renderQuickSlots() {
           <button type="button" class="reroll-btn" data-slot="${i}" title="この枠だけ再抽選">🔄</button>
         </div>
         <div class="monster-info">
-          ${name ? buildMonsterInfoHtml(name, quickState.job) : `<div class="placeholder">${isFullRandomPending() ? '「ランダム選出」で職業ごと抽選します' : '「ランダム選出」ボタンを押してください'}</div>`}
+          ${name ? buildQuickMonsterNameHtml(name) : `<div class="placeholder">${isFullRandomPending() ? '「ランダム選出」で職業ごと抽選します' : '「ランダム選出」ボタンを押してください'}</div>`}
         </div>
       `;
     }
     grid.appendChild(slot);
   }
+
+  renderQuickCompatPanel();
 
   grid.querySelectorAll('.reroll-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -2586,6 +2697,7 @@ function renderQuickSlots() {
 function initQuickTab() {
   populateQuickJobSelect();
   document.getElementById('quickCompatCheckbox').checked = quickState.compatFilter;
+  document.getElementById('quickHabitatCompatCheckbox').checked = quickState.habitatCompatFilter;
   document.getElementById('quickArmorAptitudeCheckbox').checked = quickState.armorAptitude;
   renderQuickSlots();
 }
